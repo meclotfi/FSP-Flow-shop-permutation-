@@ -4,30 +4,11 @@
 #include <map>
 #include <vector>
 #include <numeric>
+#include "../loader.h"
 
 using namespace std;
 
-void loader(int *nbJobs, int *nbMachines, int A[500][20])
-{
-    std::ifstream file("../benchmarks/20jobs10machines.txt");
-
-    if (file.is_open())
-    {
-        file >> *nbJobs >> *nbMachines;
-        for (int i = 0; i < *nbMachines; i++)
-        {
-            for (int j = 0; j < *nbJobs; j++)
-            {
-                file >> A[j][i];
-            }
-        }
-    }
-    else
-    {
-        std::cout << "File doesn't exist" << std::endl;
-    }
-}
-
+// comparaison function to sort vectors
 bool cmp(pair<int, int> &a,
          pair<int, int> &b)
 {
@@ -46,7 +27,7 @@ int main()
     vector<pair<int, int>> Sa, Sb;
     vector<int> solution;
 
-    //load le nbJobs, nbMachines and the matrix A
+    //load nbJobs, nbMachines and the matrix A
     //TODO : add the file path as params
     loader(&nbJobs, &nbMachines, A);
 
