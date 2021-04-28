@@ -1,12 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <map>
-#include <vector>
-#include <numeric>
-#include "../loader.h"
-
-using namespace std;
+#include "../FSP.h"
 
 // comparaison function to sort vectors
 bool cmp(pair<int, int> &a,
@@ -108,5 +100,9 @@ int main()
     {
         std::cout << it << " ";
     }
+
     std::cout << "" << std::endl;
+
+    // Show the makspan Cmax
+    std::cout << "Temps Cmax :" << Cmax(solution,A,nbMachines) << std::endl;
 }
