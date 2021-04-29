@@ -36,27 +36,61 @@ void loader(int *nbJobs, int *nbMachines, int A[500][20])
 // solution: a sequence of jobs
 // A: the matrix of jobs and machines 
 // nbMachines: the number of machines
+// int Cmax(vector<int> solution, int A[500][20], int nbMachines)
+// {
+//     if (solution.size() == 0 || nbMachines == 0)
+//     {
+//         return 0;
+//     }
+//     else
+//     {
+//         vector<int> v(solution.begin(), solution.end() - 1);
+//         int a, b;
+//         a = Cmax(solution, A, nbMachines - 1);
+//         b = Cmax(v, A, nbMachines);
+//         // std::cout << "a :" << a << std::endl;
+//         // std::cout << "b :" << b << std::endl;
+//         if (a >= b)
+//         {
+//             return a + A[solution.at(solution.size() - 1)][nbMachines - 1];
+//         }
+//         else
+//         {
+//             return b + A[solution.at(solution.size() - 1)][nbMachines - 1];
+//         }
+//     }
+// }
+
+// Calculate the makespan of a solution with dynamic programming
+// solution: a sequence of jobs
+// A: the matrix of jobs and machines 
+// nbMachines: the number of machines
 int Cmax(vector<int> solution, int A[500][20], int nbMachines)
 {
-    if (solution.size() == 0 || nbMachines == 0)
+    //vector<vector<int>> matrix;
+    int nbJobs = solution.size() ;
+    if ( nbJobs == 0 || nbMachines == 0)
     {
         return 0;
     }
     else
     {
-        vector<int> v(solution.begin(), solution.end() - 1);
-        int a, b;
-        a = Cmax(solution, A, nbMachines - 1);
-        b = Cmax(v, A, nbMachines);
-        // std::cout << "a :" << a << std::endl;
-        // std::cout << "b :" << b << std::endl;
-        if (a >= b)
+        int matrix[ nbJobs+1 ][ nbMachines+1 ];
+        for(int j = 0; j<=nbMachines; j++)
+            matrix[0][j]=0;
+
+        for(int i = 0; i<=nbJobs; i++)
+            matrix[i][0]=0;
+
+        for (int i = 1; i <= nbJobs; i++)
         {
-            return a + A[solution.at(solution.size() - 1)][nbMachines - 1];
+            for (int j = 1; j <= nbMachines; j++)
+            {
+                matrix[i][j] = A[solution[i-1]][j-1]; // because btw 0-19
+                matrix[i][j] += ( matrix[i-1][j] < matrix[i][j-1] ) ? matrix[i][j-1] : matrix[i-1][j] ; 
+            }
+            
         }
-        else
-        {
-            return b + A[solution.at(solution.size() - 1)][nbMachines - 1];
-        }
+        return matrix[nbJobs][nbMachines];
     }
 }
