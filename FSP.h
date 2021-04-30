@@ -4,14 +4,15 @@
 #include <map>
 #include <vector>
 #include <numeric>
+#include <string>
 
 using namespace std;
 
 // Loads data from a benchmark file and store it in A, nbJobs and nbMachines
-void loader(int *nbJobs, int *nbMachines, int A[500][20])
+void loader(string filepath,int *nbJobs, int *nbMachines, int A[500][20])
 {
     // TODO : enter the file path or number of jobs and machines as params
-    std::ifstream file("../benchmarks/20jobs10machines.txt");
+    std::ifstream file(filepath);
 
     // Check if file is open first
     if (file.is_open())
