@@ -31,7 +31,11 @@ int main(int argc, char const *argv[])
 
     // add a jobs at a time
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (size_t i = 1; i < solution.size(); i++)
+=======
+    for (size_t i = 1; i < sommeLigne.size(); i++)
+>>>>>>> 21e3a5134b228b745b7693327b5ab64b500dd042
 =======
     for (size_t i = 1; i < sommeLigne.size(); i++)
 >>>>>>> 21e3a5134b228b745b7693327b5ab64b500dd042
@@ -58,6 +62,7 @@ int main(int argc, char const *argv[])
         
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     for(auto var : solution)
     {
@@ -65,12 +70,17 @@ int main(int argc, char const *argv[])
     }
 
 =======
+=======
+>>>>>>> 21e3a5134b228b745b7693327b5ab64b500dd042
 
     for(auto var : solution)
     {
         std::cout << var+1 << " ";
     }
     std::cout << ""<< std::endl;
+<<<<<<< HEAD
+>>>>>>> 21e3a5134b228b745b7693327b5ab64b500dd042
+=======
 >>>>>>> 21e3a5134b228b745b7693327b5ab64b500dd042
     std::cout << "Cmax : " << Cmax(solution,A,nbMachines) << std::endl;
     return 0;
