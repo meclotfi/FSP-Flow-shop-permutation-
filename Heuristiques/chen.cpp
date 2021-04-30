@@ -1,6 +1,6 @@
 #include "../FSP.h"
 
-// comparaison function to sort vectors
+// comparaison function to sort vectors in ascending order
 bool cmp(pair<int, int> &a,
          pair<int, int> &b)
 {
