@@ -16,7 +16,7 @@ int M=INT32_MAX;
 bool cmp(pair<int, int> &a,
          pair<int, int> &b)
 {
-    return a.second < b.second;
+    return a.second > b.second;
 }
 int DFS(list<int> S,list<int> J)
 {
@@ -72,7 +72,7 @@ int main()
     vector<int> solution;
 
     //load nbJobs, nbMachines and the matrix A
-    string filepath="../benchmarks/500jobs20machines.txt";
+    string filepath="../benchmarks/VFR10_5_1_Gap.txt";
     loader(filepath,&nbJobs, &nbMachines, A);
 
 
