@@ -33,11 +33,11 @@ vector < pair <int, int> > V(int A[500][20], int nbJobs){
 void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
 {
     vector< pair<int, int> > my_u;
-    my_u=U(A,5);
+    my_u=U(A,nbJobs);
     vector< pair<int, int> > my_u2;
-    my_u2=V(A,5); 
+    my_u2=V(A,nbJobs); 
     my_u.insert(my_u.end(), my_u2.begin(), my_u2.end());
-    for(int i = 0; i < my_u.size(); i++)
+    for(int i = 0; i < nbJobs; i++)
     {
         solution.push_back(my_u[i].first);
     }
@@ -108,16 +108,8 @@ int main(int argc, char const *argv[])
         //lui appliquer johnson 
         Cmax = 0;
         solution.clear();
-
-       
-        cout <<"cmax"<< Cmax <<endl;
-        cout << nbJobs <<endl;
-
         johnson(Seq, nbJobs, Cmax, solution, A);
-        for(int i = 0; i < nbJobs; i++)
-        {
-            cout << solution[i] << endl;
-        }
+        
         if ( Cmax < c )
         {
             c = Cmax;
