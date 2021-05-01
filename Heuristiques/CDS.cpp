@@ -43,6 +43,48 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
     }
     cmax=Cmax(solution, data, 2);
 }
+
+    
+  void  CDS(int A[500][20], int nbJobs, int nbMachines, int &Cmax, vector<int> &solution)
+{
+    //Compare m-1 sequences de nbJobs 2 machines avec johnson et prend le meilleur Cmax
+
+    int  Seq[500][20], somme1 = 0, somme2 =0, c ;
+    vector<int> solutionsauv;
+
+    Cmax = INT32_MAX;
+
+    for (int k = 0; k < (nbMachines - 1 ); k++)  // M-1 sequences
+    {
+        //construire tableau de nbJobs 2 machines 
+        for (int i = 0; i < nbJobs; i++)
+        {
+            for (int j = 0; j <= k; j++) {somme1 = somme1 + A[i][j];}
+            for (int j = nbMachines-1; j >= nbMachines-1-k; j--) {somme2 = somme2 + A[i][j];}
+            Seq[i][0] = somme1;
+            Seq[i][1] = somme2;
+            somme1 = 0;   somme2 = 0;
+        }
+
+        //lui appliquer johnson 
+        c = 0;
+        solutionsauv.clear();
+        johnson(Seq, nbJobs, c, solutionsauv, A);
+
+        //mettre a jour Cmax si necessaire
+        if ( c < Cmax )
+        {
+            Cmax = c;
+            solution = solutionsauv;
+        }
+    
+
+    }
+   
+}
+
+
+
 /////////////////////////////////////Main pour essai de  johnson ///////////////////////////////////////
 // int main(int argc, char const *argv[])
 // {
@@ -88,40 +130,17 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
 
 int main(int argc, char const *argv[])
 {
-    int nbJobs, nbMachines, A[500][20], Seq[500][20], somme1 = 0, somme2 =0, Cmax, c = INT32_MAX; 
-    vector<int> solution, solutionsauv;
+    int nbJobs, nbMachines, A[500][20], Cmax; 
+    vector<int> solution;
 
     loader("../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A); 
- 
-    for (int k = 0; k < (nbMachines - 1 ); k++)
-    {
-        //construire tableau de nbJobs 2 machines 
-        for (int i = 0; i < nbJobs; i++)
-        {
-            for (int j = 0; j <= k; j++) {somme1 = somme1 + A[i][j];}
-            for (int j = nbMachines-1; j >= nbMachines-1-k; j--) {somme2 = somme2 + A[i][j];}
-            Seq[i][0] = somme1;
-            Seq[i][1] = somme2;
-            somme1 = 0;   somme2 = 0;
-        }
-
-        //lui appliquer johnson 
-        Cmax = 0;
-        solution.clear();
-        johnson(Seq, nbJobs, Cmax, solution, A);
-        
-        if ( Cmax < c )
-        {
-            c = Cmax;
-            solutionsauv = solution;
-        }
     
-
-    }
-    //On aura obtenu le c qui est le cmax et solutionsauv qui contient la sequence
+    CDS(A, nbJobs, nbMachines, Cmax, solution);
+    
+    cout <<"Sequence" << endl;
     for(int i = 0; i < nbJobs; i++)
        {
-           cout << solutionsauv[i] << endl;
+           cout << solution[i] << endl;
        }
-       cout << c <<endl;
+       cout << "Cmax : " << Cmax <<endl;
 }
