@@ -21,7 +21,7 @@ int main()
 
     //load nbJobs, nbMachines and the matrix A
     //TODO : add the file path as params
-    loader(&nbJobs, &nbMachines, A);
+    loader("../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
 
     // sommeLigne : verctor of sums of jobs in all machines
     int sommeLigne[nbJobs];
@@ -94,7 +94,6 @@ int main()
         solution.push_back(it.first + 1);
     }
 
-
     // Show the solution
     for (auto &it : solution)
     {
@@ -104,5 +103,5 @@ int main()
     std::cout << "" << std::endl;
 
     // Show the makspan Cmax
-    std::cout << "Temps Cmax :" << Cmax(solution,A,nbMachines) << std::endl;
+    std::cout << "Temps Cmax :" << Cmax(solution, A, nbMachines) << std::endl;
 }
