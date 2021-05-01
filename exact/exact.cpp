@@ -20,10 +20,12 @@ bool cmp(pair<int, int> &a,
 }
 int DFS(list<int> S,list<int> J)
 {
+
 if (!S.empty()) cout<<"J"<<S.back()<<" ";
 if (J.empty()) {cout << "\n"; return 0;}
+
 list<int> J1,S1;
-int i=0;
+//
 for (auto &it : J)
     {
         S1=S;
@@ -33,10 +35,12 @@ for (auto &it : J)
     // calculer le cout
     vector<int> sol(S1.begin(), S1.end());
     int cost=Cmax(sol,A,nbMachines);
+
     // tester si feuille et caluler l'evaluation sinon
     if (J1.empty())
     {
         cout<<"J"<<S1.back()<<" ";
+
         //update lower bound 
         if(M>cost)
         { 
@@ -50,11 +54,13 @@ for (auto &it : J)
         //calculer l'evaluation:
 
         //tester si possible d'elager 
+
+        // brunshing
         DFS(S1,J1);
     }
     
 
-    // brunshing
+    
         cout<<"back \n";
     }
 }
