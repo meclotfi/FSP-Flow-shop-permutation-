@@ -59,11 +59,12 @@ int DFS(list<int> S, list<int> J)
             int evaluation = eval(cost, A, nbMachines, J);
 
             //tester si possible d'elager
-            if (M < evaluation)
+            if (M > evaluation) DFS(S1, J1);
+            else cout<<" elagage ";
                 // elagage
 
                 // brunshing
-                DFS(S1, J1);
+                
         }
 
         cout << "back \n";
@@ -77,7 +78,7 @@ int main()
     vector<int> solution;
 
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/VFR10_5_1_Gap.txt";
+    string filepath = "../benchmarks/VFR10_5_7_Gap.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
 
     //initiaalization des structure de données
@@ -96,8 +97,10 @@ int main()
     for (int j = 0; j < nbMachines; j++)
     {
         J.push_back(sommeLigne[j].first);
+        cout <<sommeLigne[j].first << " ";
     }
 
     DFS(S, J);
+    cout<< "final M= "<<M;
     return 0;
 }
