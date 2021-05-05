@@ -36,30 +36,30 @@ void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
 // solution: a sequence of jobs
 // A: the matrix of jobs and machines
 // nbMachines: the number of machines
-// int Cmax(vector<int> solution, int A[500][20], int nbMachines)
-// {
-//     if (solution.size() == 0 || nbMachines == 0)
-//     {
-//         return 0;
-//     }
-//     else
-//     {
-//         vector<int> v(solution.begin(), solution.end() - 1);
-//         int a, b;
-//         a = Cmax(solution, A, nbMachines - 1);
-//         b = Cmax(v, A, nbMachines);
-//         // std::cout << "a :" << a << std::endl;
-//         // std::cout << "b :" << b << std::endl;
-//         if (a >= b)
-//         {
-//             return a + A[solution.at(solution.size() - 1)][nbMachines - 1];
-//         }
-//         else
-//         {
-//             return b + A[solution.at(solution.size() - 1)][nbMachines - 1];
-//         }
-//     }
-// }
+ int Cmaxt(vector<int> solution, int A[500][20], int nbMachines)
+ {
+     if (solution.size() == 0 || nbMachines == 0)
+     {
+         return 0;
+     }
+     else
+     {
+         vector<int> v(solution.begin(), solution.end() - 1);
+         int a, b;
+         a = Cmaxt(solution, A, nbMachines - 1);
+         b = Cmaxt(v, A, nbMachines);
+         // std::cout << "a :" << a << std::endl;
+         // std::cout << "b :" << b << std::endl;
+         if (a >= b)
+         {
+             return a + A[solution.at(solution.size() - 1)][nbMachines - 1];
+         }
+         else
+         {
+             return b + A[solution.at(solution.size() - 1)][nbMachines - 1];
+         }
+     }
+ }
 
 // Calculate the makespan of a solution with dynamic programming
 // solution: a sequence of jobs
@@ -97,7 +97,6 @@ int Cmax(vector<int> solution, int A[500][20], int nbMachines)
 int eval(int CActuel, int A[500][20], int nbMachines, list<int> J)
 {
     int C = CActuel;
-
     for (auto &it : J)
         C += A[it][nbMachines - 1];
     return C;
