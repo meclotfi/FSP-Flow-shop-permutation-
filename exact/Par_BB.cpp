@@ -47,7 +47,7 @@ int eva;
         if (J1.empty())
         {
             
-            cout << " cost= " << cost<<"\n";
+            //cout << " cost= " << cost<<"\n";
             
             // cout<<"a ";
             //update lower bound
@@ -56,7 +56,7 @@ int eva;
                 //cout << "M= " << M << " ";
                 #pragma omp atomic write
                 M = cost;
-                for (auto &it : S1) cout << "S#" << it<<" ";
+                //for (auto &it : S1) cout << "S#" << it<<" ";
                 cout<<"\n";
        
 
@@ -77,7 +77,7 @@ int eva;
                DFS(S1, J1,M,nbMachines,A);
         
                }
-             else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
+             //else //cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
                 
 
                 // brunshing
@@ -179,13 +179,14 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/10jobs5machines.txt";
+    string filepath = "../benchmarks/15jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
-    vector<int> j={1,3,0,2,4};
-    int ev=Cmaxt(j,A,nbMachines);
-    cout<<ev;
+    double debut, fin, temps;
+     debut= omp_get_wtime();
     Parallel_BB(nbJobs,nbMachines,A);
+    fin= omp_get_wtime(); temps=fin-debut;
+    printf (" \n BB Par %f secondes\n", temps);
    
     
     return 0;

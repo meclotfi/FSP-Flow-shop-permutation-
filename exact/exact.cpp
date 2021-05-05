@@ -174,13 +174,14 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/5jobs5machines.txt";
+    string filepath = "../benchmarks/10jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
-    vector<int> j={1,3,0,2,4};
-    int ev=Cmaxt(j,A,nbMachines);
-    cout<<ev;
-    //BB(nbJobs,nbMachines,A);
+    double debut, fin, temps;
+     debut= omp_get_wtime();
+    BB(nbJobs,nbMachines,A);
+    fin= omp_get_wtime(); temps=fin-debut;
+    printf ("BB seq %f secondes\n", temps);
    
     
     return 0;
