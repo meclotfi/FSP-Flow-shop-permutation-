@@ -23,66 +23,69 @@ bool cmp(pair<int, int> &a,
 int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20])
 {
 
-   if (!S.empty())
-        //cout << "J" << S.back() << " ";
-    if (J.empty())
-    {
-        //cout << "\n";
-        return 0;
-    }
+  
     
 list<int> J1, S1;
-    
+int eva;    
     
     for (auto &it : J)
     {
+        cout<<"it= "<<it<<"\n";
         
         S1 = S;
         S1.push_back(it);
         J1 = J;
         J1.remove(it);
 
-    /*
+
         for (auto &it : S1)
             {
+              cout << "S#" << it<<" ";
+         }
+
+         for (auto &it : J1)
+            {
               cout << "J#" << it<<" ";
-               }
-                        cout<<"\n";
+         }
+   cout<<"\n";
+        
+
+       
                        
-  */
+ 
         // calculer le cout
         vector<int> sol(S1.begin(), S1.end());
         int cost = Cmax(sol, A, nbMachines);
 
+        
         // tester si feuille et caluler l'evaluation sinon
         if (J1.empty())
         {
-            /*
             
-            for (auto &it : S1)
-            {
-              cout << "J" << it<<" ";
-            }
             cout << " cost= " << cost<<"\n";
-            */
+            
             // cout<<"a ";
             //update lower bound
             if (M > cost)
             {
                 //cout << "M= " << M << " ";
                 M = cost;
-                //cout << "update M= " << M << " ";
+                cout << "update M= " << M << " ";
             }
         }
         else
         {
             //calculer l'evaluation:
-           
+           //eva=eval(cost, A, nbMachines, S1);
 
             //tester si possible d'elager
            
-             DFS(S1, J1,M,nbMachines,A);
-            //else //cout<<" elagage \n";
+               cout<<"before\n";
+               for (auto &it : J1)  cout << "J#" << it<<" ";
+               DFS(S1, J1,M,nbMachines,A);
+             cout<<" back \n";
+       
+         // else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
                 // elagage
 
                 // brunshing
@@ -97,7 +100,7 @@ int BB(int nbJobs,int nbMachines,int A[500][20])
 {
 
 int M=INT32_MAX;
-int somme;
+int somme=0;
 list<int> J, S;
 vector<int> solution;
 
@@ -108,7 +111,7 @@ vector<int> solution;
 
     for (int i = 0; i < nbJobs; i++)
     {
-        c.first = i+1;
+        c.first = i;
         c.second = accumulate(A[i], A[i] + nbMachines, somme);
         sommeLigne.push_back(c);
         cout<<"sum_ligne "<<c.second<<" \n";
@@ -184,13 +187,13 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/VFR10_5_7_Gap.txt";
+    string filepath = "../benchmarks/10jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
-    //vector<int> j={3,17,15,8,9,6,5,14,16,7,11,13,18,19,1,4,2,10,20,12};
-    //int ev=Cmaxt(j,A,nbMachines);
-    //cout<<ev;
-    Parallel_BB(nbJobs,nbMachines,A);
+    vector<int> j={1,3,0,2,4};
+    int ev=Cmaxt(j,A,nbMachines);
+    cout<<ev;
+    //BB(nbJobs,nbMachines,A);
    
     
     return 0;

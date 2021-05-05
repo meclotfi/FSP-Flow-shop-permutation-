@@ -5,7 +5,7 @@
 #include <vector>
 #include <numeric>
 #include <string>
-
+#include <list>
 using namespace std;
 
 // Loads data from a benchmark file and store it in A, nbJobs and nbMachines

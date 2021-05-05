@@ -40,19 +40,25 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
     for(int i = 0; i < nbJobs; i++)
     {
         solution.push_back(my_u[i].first);
+       
     }
+    /*
+    for (&it :solution)
+    {
+        cout<<it<<"\n";
+    }*/
     cmax=Cmax(solution, data, 2);
 }
 
     
-  void  CDS(int A[500][20], int nbJobs, int nbMachines, int &Cmax, vector<int> &solution)
+  void  CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
 {
     //Compare m-1 sequences de nbJobs 2 machines avec johnson et prend le meilleur Cmax
 
     int  Seq[500][20], somme1 = 0, somme2 =0, c ;
     vector<int> solutionsauv;
 
-    Cmax = INT32_MAX;
+    cmax = INT32_MAX;
 
     for (int k = 0; k < (nbMachines - 1 ); k++)  // M-1 sequences
     {
@@ -72,15 +78,15 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
         johnson(Seq, nbJobs, c, solutionsauv, A);
 
         //mettre a jour Cmax si necessaire
-        if ( c < Cmax )
+        if ( c < cmax )
         {
-            Cmax = c;
+            cmax = c;
             solution = solutionsauv;
         }
-    
+   
 
     }
-   
+    cmax=Cmax(solution,A,nbMachines);
 }
 
 
@@ -130,17 +136,18 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
 
 int main(int argc, char const *argv[])
 {
-    int nbJobs, nbMachines, A[500][20], Cmax; 
+    int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;
 
-    loader("../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A); 
+    loader("../benchmarks/20jobs5machines.txt", &nbJobs, &nbMachines, A); 
     
-    CDS(A, nbJobs, nbMachines, Cmax, solution);
+    CDS(A, nbJobs, nbMachines, cmax, solution);
     
     cout <<"Sequence" << endl;
     for(int i = 0; i < nbJobs; i++)
        {
            cout << solution[i] << endl;
        }
-       cout << "Cmax : " << Cmax <<endl;
+       cout << "Cmax : " << cmax <<endl;
+        
 }
