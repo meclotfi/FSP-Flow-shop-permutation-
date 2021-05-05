@@ -54,7 +54,13 @@ int eva;
             if (M > cost)
             {
                 //cout << "M= " << M << " ";
+                #pragma omp atomic write
                 M = cost;
+                for (auto &it : S1) cout << "S#" << it<<" ";
+                cout<<"\n";
+       
+
+
                 cout << "update M= " << M << " ";
             }
         }
@@ -69,7 +75,6 @@ int eva;
                if(eva<M)
                {               
                DFS(S1, J1,M,nbMachines,A);
-               
         
                }
              else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
@@ -147,7 +152,7 @@ vector<int> solution;
  list<int> J1(J.begin(), J.end());
  std::list<int>::iterator it=J1.begin();
  
- #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(J1,S1)
+ #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(J1,S1) shared(M)
    for (int i = 0; i < nbJobs; i++)
     {
         printf("Thread %d starting  ...\n", omp_get_thread_num());
@@ -156,7 +161,7 @@ vector<int> solution;
        S1.push_back(J[i]);
              
         J1.remove(J[i]);
-        //it++;
+        it++;
        
         DFS(S1 , J1 , M , nbMachines , A );
 
@@ -174,13 +179,13 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/5jobs5machines.txt";
+    string filepath = "../benchmarks/10jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     vector<int> j={1,3,0,2,4};
     int ev=Cmaxt(j,A,nbMachines);
     cout<<ev;
-    //BB(nbJobs,nbMachines,A);
+    Parallel_BB(nbJobs,nbMachines,A);
    
     
     return 0;
