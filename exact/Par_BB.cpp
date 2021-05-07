@@ -125,20 +125,16 @@ vector<int> solution;
  #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M)
    for (int i = 0; i < nbJobs; i++)
     {
-        printf("Thread %d is treating branch J%d \n", omp_get_thread_num(),J[i]);
+        printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
 
         list<int> J1(J.begin(), J.end());
        list<int> S1;
        S1.push_back(J[i]);
         list<int> Jt=J1; 
         J1.remove(J[i]);
-    
-      
-
-      
        cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
         DFS(S1 , J1 , M , nbMachines , A ,cost);
-        printf("Thread %d is treating branch J%d \n", omp_get_thread_num(),J[i]);
+        printf("# Thread %d finished exploring branch J%d \n", omp_get_thread_num(),J[i]);
       
 
     }
