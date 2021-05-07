@@ -20,13 +20,15 @@ bool cmp(pair<int, int> &a,
     return a.second > b.second;
 }
 
-int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20])
+int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
 {
 
   
     
 list<int> J1, S1;
-int eva;    
+int eva;
+int cost;
+vector<int> cost2;    
     
     for (auto &it : J)
     {
@@ -39,23 +41,32 @@ int eva;
      
  
         // calculer le cout
-        vector<int> sol(S1.begin(), S1.end());
-        int cost = Cmax(sol, A, nbMachines);
+    
+       
+        cost2 = Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
+        cost=cost2.back();
+      
+       
 
         
         // tester si feuille et caluler l'evaluation sinon
         if (J1.empty())
         {
+           
+             
             
-            cout << " cost= " << cost<<"\n";
-            
-            // cout<<"a ";
+             //cout<<"cmax vec size= \n"<< cmax_vec.size();
+        
+           //cost2 = Cmax_Add_Job(cmax_vec,-1,A,nbMachines);
+           //cost =cost2.back();
+           //if(cost2.back()==cost) cout<<"accept \n";
+          
             //update lower bound
             if (M > cost)
             {
                 //cout << "M= " << M << " ";
                 M = cost;
-                cout << "update M= " << M << " ";
+                //cout << "update M= " << M << " ";
             }
         }
         else
@@ -68,11 +79,11 @@ int eva;
 
                if(eva<M)
                {               
-               DFS(S1, J1,M,nbMachines,A);
+               DFS(S1, J1,M,nbMachines,A,cost2);
                
         
                }
-             else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
+             //else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
                 
 
                 // brunshing
@@ -101,7 +112,7 @@ vector<int> solution;
         c.first = i;
         c.second = accumulate(A[i], A[i] + nbMachines, somme);
         sommeLigne.push_back(c);
-        cout<<"sum_ligne "<<c.second<<" \n";
+       
     }
     sort(sommeLigne.begin(), sommeLigne.end(), cmp);
 
@@ -111,57 +122,14 @@ vector<int> solution;
         
     }
    
-   
-    DFS(S,J,M,nbMachines,A);
-    cout<< "final M= "<<M;
-    return M;
-}
-int Parallel_BB(int nbJobs,int nbMachines,int A[500][20]) 
-{
-
-int M=INT32_MAX;
-int somme;
-vector<int> J, S;
-vector<int> solution;
-
-//initiaalization des structure de données
-    //J: l'enssemble des job non encore assigner
-    vector<pair<int, int>> sommeLigne;
-    pair<int, int> c;
-
-    for (int i = 0; i < nbJobs; i++)
+   vector<int> cmax_vec;
+   for (int j = 0; j <= nbMachines; j++)
     {
-        c.first = i;
-        c.second = accumulate(A[i], A[i] + nbMachines, somme);
-        sommeLigne.push_back(c);
-        cout<<"sum_ligne "<<c.second<<" \n";
-    }
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
-
-    for (int j = 0; j < nbJobs; j++)
-    {
-        J.push_back(sommeLigne[j].first);
+        cmax_vec.push_back(0);
         
     }
- list<int> S1; 
- list<int> J1(J.begin(), J.end());
- std::list<int>::iterator it=J1.begin();
- 
- #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(J1,S1)
-   for (int i = 0; i < nbJobs; i++)
-    {
-        printf("Thread %d starting  ...\n", omp_get_thread_num());
-       
-     
-       S1.push_back(J[i]);
-             
-        J1.remove(J[i]);
-        //it++;
-       
-        DFS(S1 , J1 , M , nbMachines , A );
-
-    }
    
+    DFS(S,J,M,nbMachines,A,cmax_vec);
     cout<< "final M= "<<M;
     return M;
 }
@@ -182,6 +150,10 @@ int main()
     BB(nbJobs,nbMachines,A);
     fin= omp_get_wtime(); temps=fin-debut;
     printf ("BB seq %f secondes\n", temps);
+    
+  //vector<int> V={9 ,6 ,8 ,5 ,0 ,3 ,7 ,1 ,4};
+  //cout<<Cmax(V,A,nbMachines);
+
    
     
     return 0;
