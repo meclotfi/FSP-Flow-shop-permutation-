@@ -13,12 +13,7 @@
 using namespace std;
 
 
-// comparaison function to sort vectors
-bool cmp(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second > b.second;
-}
+
 
 int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
 {
@@ -62,7 +57,10 @@ vector<int> cost2;
         {
             
             //calculer l'evaluation:
-           eva=eval(cost, A, nbMachines, J1);
+           //eva=eval(cost, A, nbMachines, J1);
+           eva=eval_max(cost, A, cost2, J1);
+           //int mi=*min_element(cost2.begin(), cost2.end());
+           //eva=eval_jhonson(mi, A,cost2, J1);
 
             //tester si possible d'elager
            // elagage
@@ -102,7 +100,7 @@ vector<int> solution;
         sommeLigne.push_back(c);
       
     }
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
+    sort(sommeLigne.begin(), sommeLigne.end(), cmp2);
 
     for (int j = 0; j < nbJobs; j++)
     {
@@ -151,7 +149,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/10jobs5machines.txt";
+    string filepath = "../benchmarks/13jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     double debut, fin, temps;

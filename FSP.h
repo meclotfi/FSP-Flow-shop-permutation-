@@ -8,6 +8,16 @@
 #include <list>
 using namespace std;
 
+bool cmp(pair<int, int> &a,
+         pair<int, int> &b)
+{
+    return a.second < b.second;
+}
+bool cmp2(pair<int, int> &a,
+         pair<int, int> &b)
+{
+    return a.second > b.second;
+}
 // Loads data from a benchmark file and store it in A, nbJobs and nbMachines
 void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
 {
@@ -93,13 +103,98 @@ int Cmax(vector<int> solution, int A[500][20], int nbMachines)
         return matrix[nbJobs][nbMachines];
     }
 }
+vector < pair <int, int> > U(int A[500][20], int nbJobs){
+    vector< pair<int, int> > my_u;
+    for (int j = 0 ; j < nbJobs ; j++){
+        if (A[j][0]<A[j][1]){  my_u.push_back(std::make_pair(j, A[j][0]));}
+    }
+    sort(my_u.begin(),my_u.end(),cmp);
+    return my_u;
+}
 
+vector < pair <int, int> > V(int A[500][20], int nbJobs){
+    vector< pair<int, int> > my_u;
+    for (int j = 0 ; j < nbJobs ; j++){
+        if (A[j][0]>=A[j][1]){  my_u.push_back(std::make_pair(j, A[j][1]));}
+    }
+    sort(my_u.begin(),my_u.end(),cmp2);
+    return my_u;
+}
+int Jon(int A[500][20], int nbJobs, int data[500][20])
+{
+    vector<int> solution;int cmax;
+    vector< pair<int, int> > my_u;
+    my_u=U(A,nbJobs);
+    vector< pair<int, int> > my_u2;
+    my_u2=V(A,nbJobs); 
+    my_u.insert(my_u.end(), my_u2.begin(), my_u2.end());
+    for(int i = 0; i < nbJobs; i++)
+    {
+        solution.push_back(my_u[i].first);
+       
+    }
+    /*
+    for (&it :solution)
+    {
+        cout<<it<<"\n";
+    }*/
+    cmax=Cmax(solution, data, 2);
+    return cmax;
+}
+int eval_jhonson(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
+{
+    int nbMachines=LbMachines.size()-1;
+    int nbJobs=J.size(),cmax_j=INT32_MAX;
+    int  Seq[500][20], somme1 = 0, somme2 =0, c ;
+   
+    for (int k = 0; k < (nbMachines - 1 ); k++)  // M-1 sequences
+    {
+        //construire tableau de nbJobs 2 machines 
+        for (int i = 0; i < nbJobs; i++)
+        {
+            for (int j = 0; j <= k; j++) {somme1 = somme1 + A[i][j];}
+            for (int j = nbMachines-1; j >= nbMachines-1-k; j--) {somme2 = somme2 + A[i][j];}
+            Seq[i][0] = somme1;
+            Seq[i][1] = somme2;
+            somme1 = 0;   somme2 = 0;
+        }
+
+        //lui appliquer johnson 
+        c = 0;
+       
+        int c=Jon(Seq, nbJobs, A);
+
+        //mettre a jour Cmax si necessaire
+        if ( c < cmax_j )
+        {
+            cmax_j = c;
+            
+        }
+   
+
+    }
+    return CActuel+cmax_j;
+}
 int eval(int CActuel, int A[500][20], int nbMachines, list<int> J)
 {
     int C = CActuel;
     for (auto &it : J)
         C += A[it][nbMachines - 1];
     return C;
+}
+int eval_max(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
+{
+    int C = 0,max_c=0;
+    int nbMachines=LbMachines.size();
+    for (int i = 0; i < nbMachines; i++)
+    {
+        C=LbMachines[i+1];
+    for (auto &it : J)
+        C += A[it][i];
+     if(max_c<C) max_c=C;
+    
+    }    
+    return max_c;
 }
 
 // if newJob = -1 : 'L' contains a list of jobs whose Cmax is to be computed

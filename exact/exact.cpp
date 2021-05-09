@@ -14,11 +14,7 @@ using namespace std;
 
 
 // comparaison function to sort vectors
-bool cmp(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second > b.second;
-}
+
 
 int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
 {
@@ -142,7 +138,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/10jobs5machines.txt";
+    string filepath = "../benchmarks/11J_5M.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     double debut, fin, temps;
