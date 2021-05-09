@@ -1,16 +1,7 @@
 #include "../FSP.h"
 
-bool cmp(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second < b.second;
-}
 
-bool cmp2(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second > b.second;
-}
+
 
 vector < pair <int, int> > U(int A[500][20], int nbJobs){
     vector< pair<int, int> > my_u;
