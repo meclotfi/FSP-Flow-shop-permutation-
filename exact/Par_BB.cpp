@@ -1,5 +1,6 @@
 
-#include "../FSP.h"
+//#include "../FSP.h"
+#include "../Heuristiques/CDS.cpp"
 #define CHUNKSIZE 1
 
 using namespace std;
@@ -59,10 +60,10 @@ vector<int> cost2;
             //update lower bound
             if (M > cost)
             {
-                //cout << "M= " << M << " ";
+                //S=solution
                 #pragma omp atomic write
                 M = cost;               
-                //cout << "update M= " << M << "  by "<<omp_get_thread_num()<<" \n";
+                
                 
             }
         }
@@ -71,6 +72,7 @@ vector<int> cost2;
             
             //calculer l'evaluation:
            //eva=eval(cost, A, nbMachines, J1);
+           //cout<<"eval: "<<eval(cost, A, nbMachines, J1)<<" eval max:"<<eval_max(cost, A, cost2, J1)<<"\n";      
            eva=eval_max(cost, A, cost2, J1);
            //int mi=*min_element(cost2.begin(), cost2.end());
            //eva=eval_jhonson(mi, A,cost2, J1);
@@ -157,6 +159,73 @@ int j=0;
     return M;
 }
 
+int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20]) 
+{
+
+    int M= INT32_MAX ;
+
+    int somme;
+    vector<int> J, S;
+    vector<int> solution;
+
+    CDS(A, nbJobs, nbMachines, M, solution);
+
+    //initiaalization des structure de données
+    //J: l'enssemble des job non encore assigner
+    vector<pair<int, int>> sommeLigne;
+    pair<int, int> c;
+
+    for (int i = 0; i < nbJobs; i++)
+    {
+        c.first = i;
+        c.second = accumulate(A[i], A[i] + nbMachines, somme);
+        sommeLigne.push_back(c);
+      
+    }
+    sort(sommeLigne.begin(), sommeLigne.end(), cmp2);
+
+    for (int j = 0; j < nbJobs; j++)
+    {
+        J.push_back(sommeLigne[j].first);
+        
+    }
+ 
+ //std::list<int>::iterator it=J1.begin();
+    vector<int> cmax_vec;
+    for (int j = 0; j <= nbMachines; j++)
+    {
+        cmax_vec.push_back(0);
+        
+    }
+        vector<int> cost;
+       
+
+   int j=0;
+
+   #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M)
+   for (int i = 0; i < nbJobs; i++)
+    {
+        //printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
+
+        list<int> J1(J.begin(), J.end());
+        list<int> S1;
+        S1.push_back(J[i]);
+        list<int> Jt=J1; 
+        J1.remove(J[i]);
+        cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
+        DFS(S1 , J1 , M , nbMachines , A ,cost);
+        #pragma omp atomic write
+        j=j+1;
+        int f=S1.back();
+        show_progress_bar(((float)j/(float)nbJobs),f);
+      
+
+    }
+   
+    cout<< "final M= "<<M;
+    return M;
+}
+
 int main()
 {
     int nbJobs, nbMachines, somme, A[500][20];
@@ -165,15 +234,39 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/13J_5M.txt";
+    string filepath = "../benchmarks/500jobs2machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
-    
     double debut, fin, temps;
-     debut= omp_get_wtime();
-    Parallel_BB(nbJobs,nbMachines,A);
-    fin= omp_get_wtime(); temps=fin-debut;
-    printf (" \n BB Par %f secondes\n", temps);
-   
+
+    if (nbMachines == 2){
+        // use Johnson Algo
+        int C = 0;
+        vector<int> solution;
+        debut= omp_get_wtime();
+        johnson_Cmax(A, nbJobs, C, solution, A);
+        fin= omp_get_wtime(); temps=fin-debut;
+        printf (" \n Cmax = %d\n", C);
+        printf("Best Sequence = ");
+        for (auto &it :solution)
+        {
+            cout<<it<<" ";
+        }
+        printf(" \n.");
+        printf (" \n Johnson Par %f secondes\n\n", temps);
+    }
+    else
+    {
+        debut= omp_get_wtime();
+        Parallel_BB(nbJobs,nbMachines,A);
+        fin= omp_get_wtime(); temps=fin-debut;
+        printf (" \n BB Par %f secondes\n\n", temps);
+
+
+        debut= omp_get_wtime();
+        Parallel_BB_hybride(nbJobs,nbMachines,A);
+        fin= omp_get_wtime(); temps=fin-debut;
+        printf (" \n BB hybride Par %f secondes\n", temps);
+    }   
     
     return 0;
 }

@@ -188,10 +188,11 @@ int eval(int CActuel, int A[500][20], int nbMachines, list<int> J)
 int eval_max(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
 {
     int C = 0,max_c=0;
-    int nbMachines=LbMachines.size();
+    int nbMachines=LbMachines.size()-1;
     for (int i = 0; i < nbMachines; i++)
     {
         C=LbMachines[i+1];
+        
     for (auto &it : J)
         C += A[it][i];
      if(max_c<C) max_c=C;
