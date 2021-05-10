@@ -8,6 +8,9 @@
 #include "../FSP.h"
 #include "string.h"
 #include "omp.h"
+#include <thread>
+#include <chrono>
+#include <cmath>
 #define CHUNKSIZE 1
 
 using namespace std;
@@ -130,14 +133,36 @@ vector<int> solution;
     return M;
 }
 
+
+void show_progress_bar(float prog,string message)
+{
+                                         
+
+    int barWidth = 30;
+
+    std::cout << "[";
+    int pos = barWidth * prog;
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(prog * 100.0) << " %\r  #"<< message<<"#";
+    std::cout.flush();
+
+std::cout << std::endl;
+
+}
+
 int main()
 {
     int nbJobs, nbMachines, somme, A[500][20];
     int M = INT32_MAX;
 
-    
+    show_progress_bar(0.5);
   
     //load nbJobs, nbMachines and the matrix A
+    /*
     string filepath = "../benchmarks/11J_5M.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
@@ -146,7 +171,7 @@ int main()
     BB(nbJobs,nbMachines,A);
     fin= omp_get_wtime(); temps=fin-debut;
     printf ("BB seq %f secondes\n", temps);
-    
+    */
   //vector<int> V={9 ,6 ,8 ,5 ,0 ,3 ,7 ,1 ,4};
   //cout<<Cmax(V,A,nbMachines);
 

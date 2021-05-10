@@ -5,9 +5,30 @@
 using namespace std;
 
 
+void show_progress_bar(float prog,int j)
+{
+                                         
+
+    int barWidth = 30;
+
+    std::cout << "[";
+    int pos = barWidth * prog;
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(prog * 100.0) << " % ";
+    cout<< "finished exploring branch J"<<j<<" ";
+    std::cout.flush();
+
+std::cout << std::endl;
+
+}
 
 
-int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
+
+void DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
 {
 
   
@@ -109,13 +130,13 @@ vector<int> solution;
     }
         vector<int> cost;
        
-  
 
+int j=0;
 
  #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M)
    for (int i = 0; i < nbJobs; i++)
     {
-        printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
+        //printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
 
         list<int> J1(J.begin(), J.end());
        list<int> S1;
@@ -124,7 +145,10 @@ vector<int> solution;
         J1.remove(J[i]);
        cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
         DFS(S1 , J1 , M , nbMachines , A ,cost);
-        printf("# Thread %d finished exploring branch J%d \n", omp_get_thread_num(),J[i]);
+        #pragma omp atomic write
+        j=j+1;
+        int f=S1.back();
+        show_progress_bar(((float)j/(float)nbJobs),f);
       
 
     }
@@ -141,7 +165,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/11J_5M.txt";
+    string filepath = "../benchmarks/13J_5M.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     double debut, fin, temps;
