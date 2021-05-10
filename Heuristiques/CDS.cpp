@@ -4,7 +4,6 @@
 
 
 
-
 void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
 {
     vector< pair<int, int> > my_u;
@@ -37,7 +36,7 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
 
     for (int k = 0; k < (nbMachines - 1 ); k++)  // M-1 sequences
     {
-        //construire tableau de nbJobs 2 machines 
+        //construire tableau seq de nbJobs 2 machines 
         for (int i = 0; i < nbJobs; i++)
         {
             for (int j = 0; j <= k; j++) {somme1 = somme1 + A[i][j];}
@@ -48,9 +47,10 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
         }
 
         //lui appliquer johnson 
-        c = 0;
         solutionsauv.clear();
         johnson(Seq, nbJobs, c, solutionsauv, A);
+        //recalculer le c (cmax) de la sequence retournee par johnson sur nbmachines
+        c = Cmax(solutionsauv, A, nbMachines);
 
         //mettre a jour Cmax si necessaire
         if ( c < cmax )
@@ -58,10 +58,9 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
             cmax = c;
             solution = solutionsauv;
         }
-   
 
     }
-    cmax=Cmax(solution,A,nbMachines);
+
 }
 
 
