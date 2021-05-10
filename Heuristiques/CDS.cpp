@@ -1,9 +1,6 @@
 #include "../FSP.h"
 
 
-
-
-
 void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
 {
     vector< pair<int, int> > my_u;
@@ -24,6 +21,21 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
     //On en a pas besoin dans cds, si vous en avez besoin ailleur decommenter la
     cmax=99999;
     //cmax=Cmax(solution, data, 2);
+}
+
+void johnson_Cmax(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
+{
+    vector< pair<int, int> > my_u;
+    my_u=U(A,nbJobs);
+    vector< pair<int, int> > my_u2;
+    my_u2=V(A,nbJobs); 
+    my_u.insert(my_u.end(), my_u2.begin(), my_u2.end());
+    for(int i = 0; i < nbJobs; i++)
+    {
+        solution.push_back(my_u[i].first);
+       
+    }
+    cmax=Cmax(solution, data, 2);
 }
 
     
@@ -110,7 +122,7 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
 //recuperer structure de donnees
 //for m-1 sequence construire et appeler johnson qui retourne une sequence appeler cmax levaluer stocker result tableau de m-1 case et prendre le min 
 
-int main(int argc, char const *argv[])
+int main2(int argc, char const *argv[])
 {
     int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;
