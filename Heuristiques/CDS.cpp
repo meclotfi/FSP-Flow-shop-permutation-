@@ -21,7 +21,9 @@ void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int d
     {
         cout<<it<<"\n";
     }*/
-    cmax=Cmax(solution, data, 2);
+    //On en a pas besoin dans cds, si vous en avez besoin ailleur decommenter la
+    cmax=99999;
+    //cmax=Cmax(solution, data, 2);
 }
 
     
@@ -115,9 +117,9 @@ int main(int argc, char const *argv[])
 
     loader("../benchmarks/13J_5M.txt", &nbJobs, &nbMachines, A); 
     double debut, fin, temps;
-     debut= omp_get_wtime();
-      CDS(A, nbJobs, nbMachines, cmax, solution);
-     fin= omp_get_wtime(); temps=fin-debut;
+    debut= omp_get_wtime();
+    CDS(A, nbJobs, nbMachines, cmax, solution);
+    fin= omp_get_wtime(); temps=fin-debut;
     printf (" \n CDS time %f secondes\n", temps);
     
    
