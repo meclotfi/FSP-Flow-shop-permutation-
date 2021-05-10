@@ -19,6 +19,8 @@ using namespace std;
 // comparaison function to sort vectors
 
 
+
+
 int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
 {
 
@@ -159,11 +161,11 @@ int main()
     int nbJobs, nbMachines, somme, A[500][20];
     int M = INT32_MAX;
 
-    show_progress_bar(0.5);
+ 
   
     //load nbJobs, nbMachines and the matrix A
-    /*
-    string filepath = "../benchmarks/11J_5M.txt";
+    
+    string filepath = "../benchmarks/11jobs6machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     double debut, fin, temps;
@@ -171,9 +173,9 @@ int main()
     BB(nbJobs,nbMachines,A);
     fin= omp_get_wtime(); temps=fin-debut;
     printf ("BB seq %f secondes\n", temps);
-    */
-  //vector<int> V={9 ,6 ,8 ,5 ,0 ,3 ,7 ,1 ,4};
-  //cout<<Cmax(V,A,nbMachines);
+    
+  vector<int> V={2, 3, 7, 10, 1, 5, 6, 8, 4, 9, 0};
+  cout<<Cmax(V,A,nbMachines);
 
    
     

@@ -59,10 +59,10 @@ vector<int> cost2;
             //update lower bound
             if (M > cost)
             {
-                //cout << "M= " << M << " ";
+                //S=solution
                 #pragma omp atomic write
                 M = cost;               
-                //cout << "update M= " << M << "  by "<<omp_get_thread_num()<<" \n";
+                
                 
             }
         }
@@ -71,6 +71,7 @@ vector<int> cost2;
             
             //calculer l'evaluation:
            //eva=eval(cost, A, nbMachines, J1);
+           //cout<<"eval: "<<eval(cost, A, nbMachines, J1)<<" eval max:"<<eval_max(cost, A, cost2, J1)<<"\n";      
            eva=eval_max(cost, A, cost2, J1);
            //int mi=*min_element(cost2.begin(), cost2.end());
            //eva=eval_jhonson(mi, A,cost2, J1);
@@ -165,8 +166,10 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/13J_5M.txt";
+    string filepath = "../benchmarks/9jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
+   
+    
     
     double debut, fin, temps;
      debut= omp_get_wtime();
