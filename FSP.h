@@ -6,7 +6,10 @@
 #include <numeric>
 #include <string>
 #include <list>
+#include "string.h"
+#include "omp.h"
 using namespace std;
+
 
 bool cmp(pair<int, int> &a,
          pair<int, int> &b)

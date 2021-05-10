@@ -3,23 +3,7 @@
 
 
 
-vector < pair <int, int> > U(int A[500][20], int nbJobs){
-    vector< pair<int, int> > my_u;
-    for (int j = 0 ; j < nbJobs ; j++){
-        if (A[j][0]<A[j][1]){  my_u.push_back(std::make_pair(j, A[j][0]));}
-    }
-    sort(my_u.begin(),my_u.end(),cmp);
-    return my_u;
-}
 
-vector < pair <int, int> > V(int A[500][20], int nbJobs){
-    vector< pair<int, int> > my_u;
-    for (int j = 0 ; j < nbJobs ; j++){
-        if (A[j][0]>=A[j][1]){  my_u.push_back(std::make_pair(j, A[j][1]));}
-    }
-    sort(my_u.begin(),my_u.end(),cmp2);
-    return my_u;
-}
 
 void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
 {
@@ -130,9 +114,14 @@ int main(int argc, char const *argv[])
     int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;
 
-    loader("../benchmarks/20jobs5machines.txt", &nbJobs, &nbMachines, A); 
+    loader("../benchmarks/13J_5M.txt", &nbJobs, &nbMachines, A); 
+    double debut, fin, temps;
+     debut= omp_get_wtime();
+      CDS(A, nbJobs, nbMachines, cmax, solution);
+     fin= omp_get_wtime(); temps=fin-debut;
+    printf (" \n CDS time %f secondes\n", temps);
     
-    CDS(A, nbJobs, nbMachines, cmax, solution);
+   
     
     cout <<"Sequence" << endl;
     for(int i = 0; i < nbJobs; i++)

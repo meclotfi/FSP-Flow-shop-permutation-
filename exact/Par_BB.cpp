@@ -1,13 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <map>
-#include <vector>
-#include <list>
-#include <numeric>
+
 #include "../FSP.h"
-#include "string.h"
-#include "omp.h"
 #define CHUNKSIZE 1
 
 using namespace std;
@@ -149,7 +141,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/13jobs5machines.txt";
+    string filepath = "../benchmarks/11J_5M.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     
     double debut, fin, temps;
