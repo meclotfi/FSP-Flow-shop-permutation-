@@ -254,7 +254,9 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/6jobs5machines.txt";
+    //string filepath = "../benchmarks/6jobs5machines.txt";
+    string filepath = "../benchmarks/13J_5M.txt";
+
     loader(filepath, &nbJobs, &nbMachines, A);
     double debut, fin, temps;
 
