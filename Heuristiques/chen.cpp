@@ -1,12 +1,5 @@
 #include "../FSP.h"
 
-// comparaison function to sort vectors in ascending order
-bool cmp(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second < b.second;
-}
-
 int main()
 {
     // Params
