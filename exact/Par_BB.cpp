@@ -6,7 +6,7 @@
 using namespace std;
 
 
-void show_progress_bar(float prog,int j)
+void show_progress_bar(float prog,int j,int LB)
 {
                                          
 
@@ -20,7 +20,7 @@ void show_progress_bar(float prog,int j)
         else std::cout << " ";
     }
     std::cout << "] " << int(prog * 100.0) << " % ";
-    cout<< "finished exploring branch J"<<j<<" ";
+    cout<< "finished exploring branch J"<<j<<" current lower bound is : "<<LB;
     std::cout.flush();
 
 std::cout << std::endl;
@@ -29,7 +29,7 @@ std::cout << std::endl;
 
 
 
-void DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec, vector<int> &solution)
+void DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec, list<int> &solution)
 {
 
   
@@ -62,11 +62,12 @@ vector<int> cost2;
             {
                 //S=solution
                 #pragma omp critical
-                solution.clear();
-                #pragma omp critical
-                copy(S1.begin(),S1.end(),back_inserter(solution));
-                #pragma omp critical
-                M = cost;               
+                {
+                M = cost;    
+                solution=S1;              
+               
+  
+                }             
                 
                 
             }
@@ -105,7 +106,7 @@ int Parallel_BB(int nbJobs,int nbMachines,int A[500][20])
 int M=INT32_MAX;
 int somme;
 vector<int> J, S;
-vector<int> solution;
+list<int> solution;
 
 //initiaalization des structure de données
     //J: l'enssemble des job non encore assigner
@@ -119,7 +120,7 @@ vector<int> solution;
         sommeLigne.push_back(c);
       
     }
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp2);
+    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
 
     for (int j = 0; j < nbJobs; j++)
     {
@@ -149,6 +150,7 @@ int j=0;
        S1.push_back(J[i]);
         list<int> Jt=J1; 
         J1.remove(J[i]);
+
        cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
         DFS(S1 , J1 , M , nbMachines , A ,cost,solution);
         #pragma omp atomic write
@@ -156,18 +158,18 @@ int j=0;
         int f=S1.back();
 
         // commented this because of parallelisme
-        // show_progress_bar(((float)j/(float)nbJobs),f);
+        show_progress_bar(((float)j/(float)nbJobs),f,M);
       
 
     }
     
-    std::cout << "Solution finale: ";
+    std::cout << "\n Best Sequence : ";
     for(auto var : solution)
     {
-        std::cout << var+1 <<" ";
+        cout<<"J"<< var <<" ";
     }
-    std::cout << "" << std::endl;
-    cout<< "final M= "<<M;
+   cout << "" << std::endl;
+    cout<< "  MakeSpan :"<<M;
     return M;
 }
 
@@ -178,9 +180,11 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
 
     int somme;
     vector<int> J, S;
-    vector<int> solution;
+    list<int> solution;
 
-    CDS(A, nbJobs, nbMachines, M, solution);
+    vector<int> SOL;
+
+    CDS(A, nbJobs, nbMachines, M, SOL);
 
     //initiaalization des structure de données
     //J: l'enssemble des job non encore assigner
@@ -194,7 +198,7 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
         sommeLigne.push_back(c);
       
     }
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp2);
+    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
 
     for (int j = 0; j < nbJobs; j++)
     {
@@ -231,18 +235,18 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
         int f=S1.back();
 
         // commented this because of parallelisme
-        // show_progress_bar(((float)j/(float)nbJobs),f);
+       // show_progress_bar(((float)j/(float)nbJobs),f);
       
 
     }
     
-    std::cout << "Solution finale: ";
+    std::cout << "\n  Solution finale: ";
     for(auto var : solution)
     {
-        std::cout << var+1 <<" ";
+       cout << "J"<< var <<" ";
     }
     std::cout << "" << std::endl;
-    cout<< "final M= "<<M;
+    cout<< "MakeSpan: "<<M;
     return M;
 }
 
