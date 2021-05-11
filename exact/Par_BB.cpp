@@ -158,8 +158,10 @@ int j=0;
         int f=S1.back();
 
         // commented this because of parallelisme
+        #pragma omp critical
+        {
         show_progress_bar(((float)j/(float)nbJobs),f,M);
-      
+        }
 
     }
     
@@ -258,7 +260,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/13jobs5machines.txt";
+    string filepath = "../benchmarks/11J_5M.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     double debut, fin, temps;
 
