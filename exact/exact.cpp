@@ -21,7 +21,7 @@ using namespace std;
 
 
 
-int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
+int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec,vector<int> &solution)
 {
 
   
@@ -66,6 +66,8 @@ vector<int> cost2;
             if (M > cost)
             {
                 //cout << "M= " << M << " ";
+                solution.clear();
+                copy(S1.begin(),S1.end(),back_inserter(solution));
                 M = cost;
                 //cout << "update M= " << M << " ";
             }
@@ -80,7 +82,7 @@ vector<int> cost2;
 
                if(eva<M)
                {               
-               DFS(S1, J1,M,nbMachines,A,cost2);
+               DFS(S1, J1,M,nbMachines,A,cost2,solution);
                
         
                }
@@ -130,7 +132,14 @@ vector<int> solution;
         
     }
    
-    DFS(S,J,M,nbMachines,A,cmax_vec);
+    DFS(S,J,M,nbMachines,A,cmax_vec,solution);
+
+    std::cout << "Solution finale: ";
+    for(auto var : solution)
+    {
+        std::cout << var <<" ";
+    }
+    std::cout << "" << std::endl;
     cout<< "final M= "<<M;
     return M;
 }

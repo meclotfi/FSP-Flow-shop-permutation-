@@ -29,7 +29,7 @@ std::cout << std::endl;
 
 
 
-void DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec)
+void DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec, vector<int> &solution)
 {
 
   
@@ -61,7 +61,11 @@ vector<int> cost2;
             if (M > cost)
             {
                 //S=solution
-                #pragma omp atomic write
+                #pragma omp critical
+                solution.clear();
+                #pragma omp critical
+                copy(S1.begin(),S1.end(),back_inserter(solution));
+                #pragma omp critical
                 M = cost;               
                 
                 
@@ -82,7 +86,7 @@ vector<int> cost2;
 
                if(eva<M)
                {               
-               DFS(S1, J1,M,nbMachines,A,cost2);
+               DFS(S1, J1,M,nbMachines,A,cost2,solution);
         
                }
              //else //cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
@@ -135,7 +139,7 @@ vector<int> solution;
 
 int j=0;
 
- #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M)
+ #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M,solution)
    for (int i = 0; i < nbJobs; i++)
     {
         //printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
@@ -146,15 +150,23 @@ int j=0;
         list<int> Jt=J1; 
         J1.remove(J[i]);
        cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
-        DFS(S1 , J1 , M , nbMachines , A ,cost);
+        DFS(S1 , J1 , M , nbMachines , A ,cost,solution);
         #pragma omp atomic write
         j=j+1;
         int f=S1.back();
-        show_progress_bar(((float)j/(float)nbJobs),f);
+
+        // commented this because of parallelisme
+        // show_progress_bar(((float)j/(float)nbJobs),f);
       
 
     }
-   
+    
+    std::cout << "Solution finale: ";
+    for(auto var : solution)
+    {
+        std::cout << var+1 <<" ";
+    }
+    std::cout << "" << std::endl;
     cout<< "final M= "<<M;
     return M;
 }
@@ -202,7 +214,7 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
 
    int j=0;
 
-   #pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M)
+#pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M,solution)
    for (int i = 0; i < nbJobs; i++)
     {
         //printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
@@ -213,15 +225,23 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
         list<int> Jt=J1; 
         J1.remove(J[i]);
         cost=Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
-        DFS(S1 , J1 , M , nbMachines , A ,cost);
+        DFS(S1 , J1 , M , nbMachines , A ,cost,solution);
         #pragma omp atomic write
         j=j+1;
         int f=S1.back();
-        show_progress_bar(((float)j/(float)nbJobs),f);
+
+        // commented this because of parallelisme
+        // show_progress_bar(((float)j/(float)nbJobs),f);
       
 
     }
-   
+    
+    std::cout << "Solution finale: ";
+    for(auto var : solution)
+    {
+        std::cout << var+1 <<" ";
+    }
+    std::cout << "" << std::endl;
     cout<< "final M= "<<M;
     return M;
 }
@@ -234,7 +254,7 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-    string filepath = "../benchmarks/500jobs2machines.txt";
+    string filepath = "../benchmarks/6jobs5machines.txt";
     loader(filepath, &nbJobs, &nbMachines, A);
     double debut, fin, temps;
 

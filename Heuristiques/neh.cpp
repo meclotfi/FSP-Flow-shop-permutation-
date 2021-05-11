@@ -1,12 +1,5 @@
 #include "../FSP.h"
 
-// comparison function to sort vectors in descending order
-bool cmp(pair<int, int> &a,
-         pair<int, int> &b)
-{
-    return a.second > b.second;
-}
-
 int main(int argc, char const *argv[])
 {
     int nbJobs, nbMachines, somme, A[500][20], c, currentCmax;
@@ -24,7 +17,7 @@ int main(int argc, char const *argv[])
     }
 
     // Sort in descending order the sums
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
+    sort(sommeLigne.begin(), sommeLigne.end(), cmp2);
 
     // Push the first jobs in the solution sequence
     solution.push_back(sommeLigne[0].first);
