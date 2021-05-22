@@ -171,7 +171,7 @@ int j=0;
         cout<<"J"<< var <<" ";
     }
    cout << "" << std::endl;
-    cout<< "  MakeSpan :"<<M;
+    cout<< "\tMakeSpan :"<<M;
     return M;
 }
 
@@ -220,7 +220,7 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
 
    int j=0;
 
-#pragma omp parallel for  schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M,solution)
+#pragma omp parallel for schedule(dynamic,CHUNKSIZE) firstprivate(cmax_vec,cost) shared(M,solution)
    for (int i = 0; i < nbJobs; i++)
     {
         //printf("> Thread %d is exploring branch J%d \n", omp_get_thread_num(),J[i]);
@@ -237,18 +237,20 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
         int f=S1.back();
 
         // commented this because of parallelisme
-       // show_progress_bar(((float)j/(float)nbJobs),f);
-      
+        // #pragma omp critical
+        // {
+        //     show_progress_bar(((float)j/(float)nbJobs),f,M);
+        // }
 
     }
     
-    std::cout << "\n  Solution finale: ";
+    std::cout << "\n Best Sequence: ";
     for(auto var : solution)
     {
        cout << "J"<< var <<" ";
     }
     std::cout << "" << std::endl;
-    cout<< "MakeSpan: "<<M;
+    cout<< "\tMakeSpan: "<<M;
     return M;
 }
 
@@ -260,13 +262,11 @@ int main()
     
   
     //load nbJobs, nbMachines and the matrix A
-<<<<<<< HEAD
-    string filepath = "../benchmarks/13J_5M.txt";
-=======
     //string filepath = "../benchmarks/6jobs5machines.txt";
-    string filepath = "../benchmarks/13J_5M.txt";
+    //string filepath = "../benchmarks/9jobs5machines.txt";
+    //string filepath = "../benchmarks/11J_5M.txt";
+    string filepath = "../benchmarks/500jobs2machines.txt";
 
->>>>>>> bf730c2f7bfc038809ea5679f1bfc588bcef08c2
     loader(filepath, &nbJobs, &nbMachines, A);
     double debut, fin, temps;
 
@@ -284,20 +284,20 @@ int main()
             cout<<it<<" ";
         }
         printf(" \n.");
-        printf (" \n Johnson Par %f secondes\n\n", temps);
+        printf (" \n Johnson Parallel %f secondes\n\n", temps);
     }
     else
     {
         debut= omp_get_wtime();
         Parallel_BB(nbJobs,nbMachines,A);
         fin= omp_get_wtime(); temps=fin-debut;
-        printf (" \n BB Par %f secondes\n\n", temps);
+        printf (" \n BB Parallel %f secondes\n\n", temps);
 
 
         debut= omp_get_wtime();
         Parallel_BB_hybride(nbJobs,nbMachines,A);
         fin= omp_get_wtime(); temps=fin-debut;
-        printf (" \n BB hybride Par %f secondes\n", temps);
+        printf (" \n BB hybride Parallel %f secondes\n", temps);
     }   
     
     return 0;
