@@ -53,14 +53,14 @@ int main()
             Sa.push_back(std::make_pair(i, A[i][0]));
         else
             // Add i to Sb
-            Sb.push_back(std::make_pair(i, A[i][0]));
+            Sb.push_back(std::make_pair(i, A[i][nbMachines-1]));
     }
 
     // Sort Sa
     sort(Sa.begin(), Sa.end(), cmp);
 
     // Sort Sb
-    sort(Sb.begin(), Sb.end(), cmp);
+    sort(Sb.begin(), Sb.end(), cmp2);
 
     // std::cout << "Sa" << std::endl;
     // Add Sa to the solution (we increment by one because index of matrix starts in 0)
