@@ -1,6 +1,6 @@
 #include "../FSP.h"
 
-int main()
+void Chzn(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
 {
     // Params
     // nbJobs : nember of jobs | nbMachines : nember of machines | somme : sum of a row
@@ -8,13 +8,11 @@ int main()
     // Sa :  list of jobs / Ti1 <= Tim
     // Sb : list of jobs / Ti1 > Tim
     // solution : the solution vector
-    int nbJobs, nbMachines, somme, A[500][20], c;
+    int somme, A[500][20],c;
     vector<pair<int, int>> Sa, Sb;
-    vector<int> solution;
 
     //load nbJobs, nbMachines and the matrix A
     //TODO : add the file path as params
-    loader("../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
 
     // sommeLigne : verctor of sums of jobs in all machines
     int sommeLigne[nbJobs];
@@ -86,15 +84,15 @@ int main()
 
         solution.push_back(it.first + 1);
     }
-
+    cmax=Cmax(solution, A, nbMachines);
     // Show the solution
-    for (auto &it : solution)
-    {
-        std::cout << it << " ";
-    }
+    // for (auto &it : solution)
+    // {
+    //     std::cout << it << " ";
+    // }
 
-    std::cout << "" << std::endl;
+    // std::cout << "" << std::endl;
 
-    // Show the makspan Cmax
-    std::cout << "Temps Cmax :" << Cmax(solution, A, nbMachines) << std::endl;
+    // // Show the makspan Cmax
+    // std::cout << "Temps Cmax :" << Cmax(solution, A, nbMachines) << std::endl;
 }

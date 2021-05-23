@@ -1,12 +1,11 @@
 #include "../FSP.h"
 
-int main(int argc, char const *argv[])
+void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
 {
-    int nbJobs, nbMachines, somme, A[500][20], c, currentCmax;
-    vector<int> solution, currentSequence, saveSol;
+    int somme, c, currentCmax;
+    vector<int> currentSequence, saveSol;
 
     vector<pair<int, int>> sommeLigne;
-    loader("../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
 
     // Get the sum of each line ( duration of each job in all machines )
     for (int i = 0; i < nbJobs; i++)
@@ -45,12 +44,12 @@ int main(int argc, char const *argv[])
             currentSequence = saveSol;
         }
     }
+    cmax=Cmax(solution, A, nbMachines);
+    // for (auto var : solution)
+    // {
+    //     std::cout << var + 1 << " ";
+    // }
 
-    for (auto var : solution)
-    {
-        std::cout << var + 1 << " ";
-    }
-    std::cout << "" << std::endl;
-    std::cout << "Cmax : " << Cmax(solution, A, nbMachines) << std::endl;
-    return 0;
+    // std::cout << "" << std::endl;
+    // std::cout << "Cmax : " << Cmax(solution, A, nbMachines) << std::endl;
 }
