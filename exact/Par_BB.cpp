@@ -1,10 +1,9 @@
-
-//#include "../FSP.h"
-#include "../Heuristiques/CDS.cpp"
+#include "../FSP.h"
 #define CHUNKSIZE 1
 
 using namespace std;
 
+void CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
 
 void show_progress_bar(float prog,int j,int LB)
 {
@@ -274,8 +273,8 @@ int main3()
         // use Johnson Algo
         int C = 0;
         vector<int> solution;
-        debut= omp_get_wtime();
-        johnson_Cmax(A, nbJobs, C, solution, A);
+        debut= omp_get_wtime(); // return Johnson sol
+        CDS(A, nbJobs, nbMachines, C, solution);
         fin= omp_get_wtime(); temps=fin-debut;
         printf (" \n Cmax = %d\n", C);
         printf("Best Sequence = ");

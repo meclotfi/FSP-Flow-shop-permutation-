@@ -1,6 +1,12 @@
-//#include "../FSP.h"
-//#include "../Heuristiques/CDS.cpp"
-#include "../exact/Par_BB.cpp"
+#include "../FSP.h"
+
+    int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20]) ;
+    void CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
+    void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
+    void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
+
+// Use This command to compile:
+// g++ RT.cpp ../Heuristiques/chen.cpp ../Heuristiques/CDS.cpp ../Heuristiques/neh.cpp  ../exact/Par_BB.cpp -fopenmp -o g
 
 vector<vector<int>> AdjacentExchange(vector<int> Sol){
     vector<vector<int>> Neighborhood;
@@ -28,7 +34,7 @@ bool notTabu(vector<int> S, vector<vector<int>> LT){
 // next fit ?
 
 // stop = Pourcentage to stop the same score, from the nbJobs ... by default,
-void RT(int A[500][20], int nbJobs, int nbMachines, int LT_MAX_SIZE, int stop, int &cmax, vector<int> &solution)
+void RT(int A[500][20], int nbJobs, char Method, int nbMachines, int LT_MAX_SIZE, int stop, int &cmax, vector<int> &solution)
 {
     int M= INT32_MAX ;
     int Act;
@@ -37,7 +43,12 @@ void RT(int A[500][20], int nbJobs, int nbMachines, int LT_MAX_SIZE, int stop, i
     vector<vector<int>> Neighborhood;
     vector<int> S, Smax, T, Spreq;
     int T_cmax = 0 ;
-    CDS(A, nbJobs, nbMachines, M, S);
+    if (Method == 'C')
+        CDS(A, nbJobs, nbMachines, M, S);
+    else if (Method == 'N')
+        NEH(A, nbJobs, nbMachines, M, S);
+    else
+        Chen(A, nbJobs, nbMachines, M, S);
     Smax = S;
     int i =0;
 
@@ -174,7 +185,7 @@ int main()
     
     start = clock();
     vector<int> sol;
-    RT(A,nbJobs,nbMachines,7,5,M,sol); // was 7, and 10 for 20.20
+    RT(A,nbJobs,nbMachines,'C',7,5,M,sol); // was 7, and 10 for 20.20
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 

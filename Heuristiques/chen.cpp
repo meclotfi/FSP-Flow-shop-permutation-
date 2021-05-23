@@ -1,6 +1,6 @@
 #include "../FSP.h"
 
-void Chzn(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
+void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
 {
     // Params
     // nbJobs : nember of jobs | nbMachines : nember of machines | somme : sum of a row
@@ -8,7 +8,9 @@ void Chzn(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
     // Sa :  list of jobs / Ti1 <= Tim
     // Sb : list of jobs / Ti1 > Tim
     // solution : the solution vector
-    int somme, A[500][20],c;
+    //int somme, A[500][20],c;
+    int somme,c; //Removed A because it a function parameter
+
     vector<pair<int, int>> Sa, Sb;
 
     //load nbJobs, nbMachines and the matrix A

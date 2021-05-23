@@ -11,22 +11,21 @@
 #include <random>
 #include <ctime>   // For time()
 #include <cstdlib> // For srand() and rand()
-using namespace std;
 
 using namespace std;
 
-bool cmp(pair<int, int> &a,
+static bool cmp(pair<int, int> &a,
          pair<int, int> &b)
 {
     return a.second < b.second;
 }
-bool cmp2(pair<int, int> &a,
+static bool cmp2(pair<int, int> &a,
           pair<int, int> &b)
 {
     return a.second > b.second;
 }
 // Loads data from a benchmark file and store it in A, nbJobs and nbMachines
-void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
+static void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
 {
     // TODO : enter the file path or number of jobs and machines as params
     std::ifstream file(filepath);
@@ -53,7 +52,7 @@ void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
 // solution: a sequence of jobs
 // A: the matrix of jobs and machines
 // nbMachines: the number of machines
-int Cmaxt(vector<int> solution, int A[500][20], int nbMachines)
+static int Cmaxt(vector<int> solution, int A[500][20], int nbMachines)
 {
     if (solution.size() == 0 || nbMachines == 0)
     {
@@ -82,7 +81,7 @@ int Cmaxt(vector<int> solution, int A[500][20], int nbMachines)
 // solution: a sequence of jobs
 // A: the matrix of jobs and machines
 // nbMachines: the number of machines
-int Cmax(vector<int> solution, int A[500][20], int nbMachines)
+static int Cmax(vector<int> solution, int A[500][20], int nbMachines)
 {
     //vector<vector<int>> matrix;
     int nbJobs = solution.size();
@@ -110,7 +109,7 @@ int Cmax(vector<int> solution, int A[500][20], int nbMachines)
         return matrix[nbJobs][nbMachines];
     }
 }
-vector<pair<int, int>> U(int A[500][20], int nbJobs)
+static vector<pair<int, int>> U(int A[500][20], int nbJobs)
 {
     vector<pair<int, int>> my_u;
     for (int j = 0; j < nbJobs; j++)
@@ -124,7 +123,7 @@ vector<pair<int, int>> U(int A[500][20], int nbJobs)
     return my_u;
 }
 
-vector<pair<int, int>> V(int A[500][20], int nbJobs)
+static vector<pair<int, int>> V(int A[500][20], int nbJobs)
 {
     vector<pair<int, int>> my_u;
     for (int j = 0; j < nbJobs; j++)
@@ -137,7 +136,7 @@ vector<pair<int, int>> V(int A[500][20], int nbJobs)
     sort(my_u.begin(), my_u.end(), cmp2);
     return my_u;
 }
-int Jon(int A[500][20], int nbJobs, int data[500][20])
+static int Jon(int A[500][20], int nbJobs, int data[500][20])
 {
     vector<int> solution;
     int cmax;
@@ -158,7 +157,7 @@ int Jon(int A[500][20], int nbJobs, int data[500][20])
     cmax = Cmax(solution, data, 2);
     return cmax;
 }
-int eval_jhonson(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
+static int eval_jhonson(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
 {
     int nbMachines = LbMachines.size() - 1;
     int nbJobs = J.size(), cmax_j = INT32_MAX;
@@ -196,14 +195,14 @@ int eval_jhonson(int CActuel, int A[500][20], vector<int> LbMachines, list<int> 
     }
     return CActuel + cmax_j;
 }
-int eval(int CActuel, int A[500][20], int nbMachines, list<int> J)
+static int eval(int CActuel, int A[500][20], int nbMachines, list<int> J)
 {
     int C = CActuel;
     for (auto &it : J)
         C += A[it][nbMachines - 1];
     return C;
 }
-int eval_max(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
+static int eval_max(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
 {
     int C = 0, max_c = 0;
     int nbMachines = LbMachines.size() - 1;
@@ -223,7 +222,7 @@ int eval_max(int CActuel, int A[500][20], vector<int> LbMachines, list<int> J)
 // else, 'L' contains the exection times of the last job on all the machines ( + '0' in the first position)
 // OUTPUT: a vector of the newJob execution, with same structure as L
 // NOTE: Please access to the Cmax using: res[nbMachines].
-vector<int> Cmax_Add_Job(vector<int> L, int newJob, int A[500][20], int nbMachines)
+static vector<int> Cmax_Add_Job(vector<int> L, int newJob, int A[500][20], int nbMachines)
 {
     if (nbMachines == 0)
         return vector<int>(); // ERROR!

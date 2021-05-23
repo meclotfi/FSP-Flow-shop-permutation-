@@ -1,6 +1,5 @@
 #include "../FSP.h"
 
-
 void johnson(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, int data[500][20])
 {
     vector< pair<int, int> > my_u;
@@ -39,7 +38,7 @@ void johnson_Cmax(int A[500][20], int nbJobs, int &cmax, vector<int> &solution, 
 }
 
     
-  void  CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
+void  CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution)
 {
     //Compare m-1 sequences de nbJobs 2 machines avec johnson et prend le meilleur Cmax
 
