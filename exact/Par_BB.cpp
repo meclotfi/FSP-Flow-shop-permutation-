@@ -254,7 +254,7 @@ int Parallel_BB_hybride(int nbJobs,int nbMachines,int A[500][20])
     return M;
 }
 
-int main()
+int main3()
 {
     int nbJobs, nbMachines, somme, A[500][20];
     int M = INT32_MAX;
