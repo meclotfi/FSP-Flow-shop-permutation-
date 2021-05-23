@@ -8,8 +8,10 @@
 #include <list>
 #include "string.h"
 #include "omp.h"
-#include <time.h>
 #include <random>
+#include <ctime>   // For time()
+#include <cstdlib> // For srand() and rand()
+using namespace std;
 
 using namespace std;
 
