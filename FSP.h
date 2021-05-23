@@ -5,6 +5,8 @@
 #include <vector>
 #include <numeric>
 #include <string>
+#include <iterator>
+#include <stdexcept>
 #include <list>
 #include "string.h"
 #include "omp.h"
@@ -24,6 +26,8 @@ static bool cmp2(pair<int, int> &a,
 {
     return a.second > b.second;
 }
+
+
 // Loads data from a benchmark file and store it in A, nbJobs and nbMachines
 static void loader(string filepath, int *nbJobs, int *nbMachines, int A[500][20])
 {
@@ -83,7 +87,7 @@ static int Cmaxt(vector<int> solution, int A[500][20], int nbMachines)
 // nbMachines: the number of machines
 static int Cmax(vector<int> solution, int A[500][20], int nbMachines)
 {
-    //vector<vector<int>> matrix;
+    //vector<vector<int> > matrix;
     int nbJobs = solution.size();
     if (nbJobs == 0 || nbMachines == 0)
     {
@@ -109,9 +113,9 @@ static int Cmax(vector<int> solution, int A[500][20], int nbMachines)
         return matrix[nbJobs][nbMachines];
     }
 }
-static vector<pair<int, int>> U(int A[500][20], int nbJobs)
+static vector<pair<int, int> > U(int A[500][20], int nbJobs)
 {
-    vector<pair<int, int>> my_u;
+    vector<pair<int, int> > my_u;
     for (int j = 0; j < nbJobs; j++)
     {
         if (A[j][0] < A[j][1])
@@ -123,9 +127,9 @@ static vector<pair<int, int>> U(int A[500][20], int nbJobs)
     return my_u;
 }
 
-static vector<pair<int, int>> V(int A[500][20], int nbJobs)
+static vector<pair<int, int> > V(int A[500][20], int nbJobs)
 {
-    vector<pair<int, int>> my_u;
+    vector<pair<int, int> > my_u;
     for (int j = 0; j < nbJobs; j++)
     {
         if (A[j][0] >= A[j][1])
@@ -140,9 +144,9 @@ static int Jon(int A[500][20], int nbJobs, int data[500][20])
 {
     vector<int> solution;
     int cmax;
-    vector<pair<int, int>> my_u;
+    vector<pair<int, int> > my_u;
     my_u = U(A, nbJobs);
-    vector<pair<int, int>> my_u2;
+    vector<pair<int, int> > my_u2;
     my_u2 = V(A, nbJobs);
     my_u.insert(my_u.end(), my_u2.begin(), my_u2.end());
     for (int i = 0; i < nbJobs; i++)
