@@ -27,6 +27,36 @@ void mutation_swap(vector<int> individu, int nbjobs, double proba_mut, vector<in
     }
 }
 
+//Fonction de mutation par insertion
+void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<int> &indivMute)
+{
+    double x;
+    int job, position, posJ;
+
+    // copie du vecteur comme tel
+    indivMute = individu;
+
+    // géneration aléatoire
+    std::default_random_engine eng(time(0));
+    std::uniform_real_distribution<double> distr(0.0, 1.0);
+    std::uniform_int_distribution<int> distrib(0, nbjobs);
+    x = distr(eng);
+
+    if (x <= proba_mut)
+    {
+        job = distrib(eng);
+        position = distrib(eng);
+        auto it = find(indivMute.begin(), indivMute.end(), job);
+        // If element was found
+        if (it != indivMute.end())
+        {
+            posJ = it - indivMute.begin();                       // position actuelle du job
+            indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
+            indivMute.erase(indivMute.begin() + posJ);           // suppression dans ancienne position
+        }
+    }
+}
+
 int main()
 {
     vector<int> ind, indmute;
@@ -41,7 +71,8 @@ int main()
     {
         cout << ind[i] << endl;
     }
-    mutation_swap(ind, nbjobs, p_mutation, indmute);
+    //mutation_swap(ind, nbjobs, p_mutation, indmute);
+    mutation_insert(ind, nbjobs, p_mutation, indmute);
     cout << "lindividu muteeeeeee" << endl;
     for (int i = 0; i < nbjobs; i++)
     {

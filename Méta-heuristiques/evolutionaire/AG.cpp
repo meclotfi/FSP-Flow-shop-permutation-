@@ -2,11 +2,13 @@
 
 using namespace std;
 
-double fitness(int A[500][20], int nbMachines, vector<int> solution) // calcul la fitness d'une solution
+// calcul la fitness d'une solution
+double fitness(int A[500][20], int nbMachines, vector<int> solution)
 {
     return (1. / Cmax(solution, A, nbMachines));
 }
 
+// generation aléatoire de la population initiale
 void gen_initiale(int nbjobs, int A[500][20], int nbMachines, int nb_elements, multimap<double, vector<int>> &population)
 {
     double f;
@@ -33,6 +35,7 @@ void gen_initiale(int nbjobs, int A[500][20], int nbMachines, int nb_elements, m
     }
 }
 
+// Selection par roulette
 void select_roulette(multimap<double, vector<int>> &population, vector<vector<int>> &parents)
 {
     double somme_f = 0, x, y;
@@ -77,19 +80,303 @@ void select_roulette(multimap<double, vector<int>> &population, vector<vector<in
     }
 }
 
+// Croisement à 1 point
+void Croisement1pt(vector<int> P1, vector<int> P2, int nbJobs, double proba, vector<int> &E1, vector<int> &E2)
+{
+    double x;
+    x = rand() / (RAND_MAX + 1.);
+
+    if (x <= proba)
+    {
+        int y;
+        y = 1 + (rand() / (RAND_MAX / (nbJobs - 1)));
+        for (int i = 0; i < y; i++)
+        {
+            E1.push_back(P1[i]);
+            E2.push_back(P2[i]);
+        }
+        int ind1 = y, ind2 = y;
+        for (int j = y; j < nbJobs; j++)
+        {
+            if (std::count(E1.begin(), E1.end(), P2[j]))
+            {
+                while (ind1 < nbJobs && std::count(E1.begin(), E1.end(), P1[ind1]))
+                {
+                    ind1++;
+                }
+                if (ind1 < nbJobs)
+                {
+                    E1.push_back(P1[ind1]);
+                }
+            }
+            else
+            {
+                E1.push_back(P2[j]);
+            }
+
+            if (std::count(E2.begin(), E2.end(), P1[j]))
+            {
+                while (ind2 < nbJobs && std::count(E2.begin(), E2.end(), P2[ind2]))
+                {
+                    ind2++;
+                }
+                if (ind1 < nbJobs)
+                {
+                    E2.push_back(P2[ind2]);
+                }
+            }
+            else
+            {
+                E2.push_back(P1[j]);
+            }
+        }
+    }
+}
+
+// Croisement à 1 point
+void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, vector<int> &E1, vector<int> &E2)
+{
+    double x;
+    x = rand() / (RAND_MAX + 1.);
+    cout << endl
+         << "proba " << x << endl;
+
+    if (x <= proba)
+    {
+        int y = 0, z = 0;
+        while (y == z)
+        {
+            y = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
+            z = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
+        }
+        if (y > z)
+        {
+            int temp = z;
+            z = y;
+            y = temp;
+        }
+        cout << endl
+             << "alpha: " << y << endl
+             << "beta: " << z << endl;
+        for (int i = 0; i < y; i++)
+        {
+            E1.push_back(P1[i]);
+            E2.push_back(P2[i]);
+        }
+        for (int i = y; i < nbJobs; i++)
+        {
+            E1.push_back(NULL);
+            E2.push_back(NULL);
+        }
+        for (int i = z + 1; i < nbJobs; i++)
+        {
+            E1.at(i) = P1[i];
+            E2.at(i) = P2[i];
+        }
+        int ind1 = y, ind2 = y;
+        for (int j = y; j <= z; j++)
+        {
+            if (std::count(E1.begin(), E1.end(), P2[j]))
+            {
+                while (ind1 <= z && std::count(E1.begin(), E1.end(), P1[ind1]))
+                {
+                    ind1++;
+                }
+                if (ind1 <= z)
+                {
+                    E1.at(j) = P1[ind1];
+                }
+            }
+            else
+            {
+                E1.at(j) = P2[j];
+            }
+
+            if (std::count(E2.begin(), E2.end(), P1[j]))
+            {
+                while (ind2 <= z && std::count(E2.begin(), E2.end(), P2[ind2]))
+                {
+                    ind2++;
+                }
+                if (ind1 <= z)
+                {
+                    E2.at(j) = P2[ind2];
+                }
+            }
+            else
+            {
+                E2.at(j) = P1[j];
+            }
+        }
+    }
+}
+
+//Mutation par echange
+void mutation_swap(vector<int> individu, int nbjobs, double proba_mut, vector<int> &indivMute)
+{
+    double d;
+    int alpha, beta;
+
+    srand(time(0));
+    d = rand() / (RAND_MAX + 1.);
+    //cout << "proba" << d <<endl;
+
+    if (d <= proba_mut)
+    {
+        alpha = rand() / (RAND_MAX / (nbjobs - 1));
+        beta = rand() / (RAND_MAX / (nbjobs - 1));
+        while (alpha == beta)
+        {
+            beta = rand() / (RAND_MAX / (nbjobs - 1));
+        }
+        //cout << "premiere position " << alpha << endl;
+        //cout << "2eme position " << beta << endl;
+
+        //permuter les jobs des deux positions alpha et beta dans indivMute
+        indivMute = individu;
+        std ::iter_swap(indivMute.begin() + alpha, indivMute.begin() + beta);
+    }
+}
+
+//Mutation par insertion
+void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<int> &indivMute)
+{
+    double x;
+    int job, position, posJ;
+
+    // copie du vecteur comme tel
+    indivMute = individu;
+
+    // géneration aléatoire
+    std::default_random_engine eng(time(0));
+    std::uniform_real_distribution<double> distr(0.0, 1.0);
+    std::uniform_int_distribution<int> distrib(0, nbjobs);
+    x = distr(eng);
+
+    if (x <= proba_mut)
+    {
+        job = distrib(eng);
+        position = distrib(eng);
+        auto it = find(indivMute.begin(), indivMute.end(), job);
+        // If element was found
+        if (it != indivMute.end())
+        {
+            posJ = it - indivMute.begin();                       // position actuelle du job
+            indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
+            indivMute.erase(indivMute.begin() + posJ);           // suppression dans ancienne position
+        }
+    }
+}
+
+// remplacement selon fitness
+void remplacement(int taille, multimap<double, vector<int>> &newP, multimap<double, vector<int>> pool)
+{
+    //  int sizeP = P.size();
+    //  int sizeE = E.size();
+    multimap<double, vector<int>>::iterator it;
+    /*
+    for (int i=0; i<sizeP; i++){
+        pool.insert(P[i]);
+    }*/
+
+    newP.clear();
+    it = pool.end();
+    for (int i = 0; i < taille; i++)
+    {
+        --it;
+        newP.insert(make_pair(it->first, it->second));
+    }
+}
+
+// algo général
+void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double prob_crois, double prob_mut, char tech_mut, char tech_crois, int nb_gen, vector<int> &solution, int &cmax)
+// tech_mut :      si = 'S' => par swap     ;        si = 'I' => par insertion
+// tech_crois :    si = 1 => 1pnt           ;        si = '2' => 2 pnts
+{
+    // déclarations
+    multimap<double, vector<int>> population; // correspondance <fitness, solution>
+    multimap<double, vector<int>> population2;
+    multimap<double, vector<int>> enf;
+    vector<vector<int>> parents; // les 2 parents séléctionnés pour croisement
+    vector<int> E1, E2, ind_M;
+    double f;
+    multimap<double, vector<int>>::iterator it; // iterator
+
+    // logique
+    gen_initiale(nbJobs, A, nbMachines, taille_pop, population);
+
+    for (int i = 0; i < nb_gen; i++)
+    {
+        while (enf.size() < taille_pop) // générer des enfants
+        {
+            select_roulette(population, parents);
+
+            if (tech_crois == '1')
+            {
+                Croisement1pt(parents[0], parents[1], nbJobs, prob_crois, E1, E2);
+            }
+            else if (tech_crois == '2')
+            {
+                Croisement2pts(parents[0], parents[1], nbJobs, prob_crois, E1, E2);
+            }
+
+            f = fitness(A, nbMachines, E1);
+            enf.insert(make_pair(f, E1));
+
+            f = fitness(A, nbMachines, E2);
+            enf.insert(make_pair(f, E2));
+        }
+
+        for (it = population.begin(); it != population.end(); ++it) // pour chaque indiv de la population
+        {
+            if (tech_mut == 'S')
+            {
+                mutation_swap(it->second, nbJobs, prob_mut, ind_M);
+                f = fitness(A, nbMachines, ind_M);
+                population2.insert(make_pair(f, ind_M));
+            }
+            else if (tech_mut == 'I')
+            {
+                mutation_insert(it->second, nbJobs, prob_mut, ind_M);
+                f = fitness(A, nbMachines, ind_M);
+                population2.insert(make_pair(f, ind_M));
+            }
+        }
+
+        for (it = enf.begin(); it != enf.end(); ++it) // regrouper enfants et parents
+        {
+            population2.insert(make_pair(it->first, it->second));
+        }
+
+        remplacement(taille_pop, population, population2);
+    }
+    it = population.end();
+    solution = it->second;
+    cmax = Cmax(solution, A, nbMachines);
+}
+
 int main()
 {
     int nbJobs, nbMachines, A[500][20];
-    multimap<double, vector<int>> population; // correspondance <fitness, solution>
-    vector<vector<int>> parents;              // les 2 parents séléctionnés pour croisement
+    vector<int> solution;
+    int cmax;
 
     //load nbJobs, nbMachines and the matrix A
-    loader("../../benchmarks/5jobs5machines.txt", &nbJobs, &nbMachines, A);
+    loader("../../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
 
-    gen_initiale(nbJobs, A, nbMachines, 500, population);
+    Algo_Gen(A, nbJobs, nbMachines, 1000, 0.8, 0.8, 'S', '1', 500, solution, cmax);
 
-    multimap<double, vector<int>>::iterator it;
+    for (auto var : solution)
+    {
+        cout << "J" << var << " ";
+    }
+    cout << endl;
+
+    cout << "cmax = " << cmax << endl;
+
     /* afficher la population
+    multimap<double, vector<int>>::iterator it;
+
     for (it = population.begin(); it != population.end(); ++it)
     {
         cout << it->first << "=>";
@@ -100,8 +387,6 @@ int main()
         }
         cout << endl;
     } */
-
-    select_roulette(population, parents);
 
     return 0;
 }
