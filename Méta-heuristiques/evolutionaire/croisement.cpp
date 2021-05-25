@@ -43,7 +43,7 @@ void Croisement1pt(vector<int> P1, vector<int> P2, int nbJobs, double proba, vec
                 {
                     ind2++;
                 }
-                if (ind1 < nbJobs)
+                if (ind2 < nbJobs)
                 {
                     E2.push_back(P2[ind2]);
                 }
@@ -84,8 +84,8 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
             E2.push_back(P2[i]);
         }
         for (int i=y; i<nbJobs;i++){
-            E1.push_back(NULL);
-            E2.push_back(NULL);
+            E1.push_back(nbJobs+10);
+            E2.push_back(nbJobs+10);
         }
         for (int i = z+1; i < nbJobs; i++)
         {
@@ -117,9 +117,10 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
                 {
                     ind2++;
                 }
-                if (ind1 <= z )
+                if (ind2 <= z )
                 {
                     E2.at(j)=P2[ind2];
+
                 }
             }
             else
@@ -139,13 +140,26 @@ int main(int argc, char const *argv[])
     vector<int> E2;
     vector<int> E3;
     vector<int> E4;
-    int nbJobs = 10;
-    double proba = 0.9;
+    int nbJobs = 5;
+    double proba = 1;/*
     for (int i = 0; i < nbJobs; i++)
     {
         P1.push_back(i);
         P2.push_back(nbJobs - i - 1);
-    }
+    }*/
+    P1.push_back(4);
+    P1.push_back(1);
+    P1.push_back(3);
+    P1.push_back(2);
+    P1.push_back(0);
+
+    P2.push_back(2);
+    P2.push_back(3);
+    P2.push_back(1);
+    P2.push_back(0);
+    P2.push_back(4);
+
+
     cout << endl
          << "P1" << endl;
     for (int i = 0; i < nbJobs; i++)
