@@ -61,11 +61,10 @@ void select_roulette(multimap<double, vector<int>> &population, vector<vector<in
     }
 
     // géneration aléatoire
-    std::default_random_engine eng(time(0));
-    std::uniform_real_distribution<double> distr(0.0, 1.0);
     i = 0;
-    x = distr(eng);
-    y = distr(eng);
+    // géneration aléatoire
+    x = rand() / (RAND_MAX + 1.);
+    y = rand() / (RAND_MAX + 1.);
 
     // choisir deux parents
     for (it = population.begin(); it != population.end(); ++it)
@@ -136,6 +135,20 @@ void Croisement1pt(vector<int> P1, vector<int> P2, int nbJobs, double proba, vec
 // Croisement à 1 point
 void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, vector<int> &E1, vector<int> &E2)
 {
+    cout << "premier parent" << endl;
+    for (auto var : P1)
+    {
+        cout << "J" << var << " ";
+    }
+    cout << endl;
+
+    cout << "deuxieme parent" << endl;
+    for (auto var : P2)
+    {
+        cout << "J" << var << " ";
+    }
+    cout << endl;
+
     double x;
     x = rand() / (RAND_MAX + 1.);
     cout << endl
@@ -163,6 +176,8 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
             E1.push_back(P1[i]);
             E2.push_back(P2[i]);
         }
+        cout << "finishing first part" << endl;
+
         for (int i = y; i < nbJobs; i++)
         {
             E1.push_back(NULL);
@@ -209,6 +224,20 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
             }
         }
     }
+
+    cout << "premier enfant" << endl;
+    for (auto var : E1)
+    {
+        cout << "J" << var << " ";
+    }
+    cout << endl;
+
+    cout << "deuxieme enfant" << endl;
+    for (auto var : E2)
+    {
+        cout << "J" << var << " ";
+    }
+    cout << endl;
 }
 
 //Mutation par echange
@@ -243,21 +272,20 @@ void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<
 {
     double x;
     int job, position, posJ;
+    vector<int>::iterator it;
 
     // copie du vecteur comme tel
     indivMute = individu;
 
     // géneration aléatoire
-    std::default_random_engine eng(time(0));
-    std::uniform_real_distribution<double> distr(0.0, 1.0);
-    std::uniform_int_distribution<int> distrib(0, nbjobs);
-    x = distr(eng);
+    x = rand() / (RAND_MAX + 1.);
 
     if (x <= proba_mut)
     {
-        job = distrib(eng);
-        position = distrib(eng);
-        auto it = find(indivMute.begin(), indivMute.end(), job);
+        job = rand() / (RAND_MAX / (nbjobs - 1));
+        position = rand() / (RAND_MAX / (nbjobs - 1));
+
+        it = find(indivMute.begin(), indivMute.end(), job);
         // If element was found
         if (it != indivMute.end())
         {
@@ -279,7 +307,6 @@ void remplacement(int taille, multimap<double, vector<int>> &newP, multimap<doub
         pool.insert(P[i]);
     }*/
 
-    newP.clear();
     it = pool.end();
     for (int i = 0; i < taille; i++)
     {
@@ -309,8 +336,13 @@ void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double
     {
         while (enf.size() < taille_pop) // générer des enfants
         {
-            select_roulette(population, parents);
+            E1.clear();
+            E2.clear();
+            parents.clear();
 
+            select_roulette(population, parents); // séléctionner 2 parents
+
+            // croisement
             if (tech_crois == '1')
             {
                 Croisement1pt(parents[0], parents[1], nbJobs, prob_crois, E1, E2);
@@ -320,13 +352,20 @@ void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double
                 Croisement2pts(parents[0], parents[1], nbJobs, prob_crois, E1, E2);
             }
 
-            f = fitness(A, nbMachines, E1);
-            enf.insert(make_pair(f, E1));
-
-            f = fitness(A, nbMachines, E2);
-            enf.insert(make_pair(f, E2));
+            // ajout s'il y a eu croisement
+            if (!E1.empty())
+            {
+                f = fitness(A, nbMachines, E1);
+                enf.insert(make_pair(f, E1));
+            }
+            if (!E2.empty())
+            {
+                f = fitness(A, nbMachines, E2);
+                enf.insert(make_pair(f, E2));
+            }
         }
 
+        // mutation
         for (it = population.begin(); it != population.end(); ++it) // pour chaque indiv de la population
         {
             if (tech_mut == 'S')
@@ -348,7 +387,10 @@ void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double
             population2.insert(make_pair(it->first, it->second));
         }
 
+        // remplacement
+        population.clear();
         remplacement(taille_pop, population, population2);
+        population2.clear();
     }
     it = population.end();
     solution = it->second;
@@ -366,14 +408,14 @@ int main()
     clock_t start, end;
 
     start = clock();
-    Algo_Gen(A, nbJobs, nbMachines, 500, 0.8, 0.8, 'S', '1', 50, solution, cmax);
+    Algo_Gen(A, nbJobs, nbMachines, 200, 0.8, 0.8, 'I', '1', 20, solution, cmax);
 
     end = clock();
     double temps = double(end - start) / double(CLOCKS_PER_SEC);
 
-    for (auto var : solution)
+    for (int i = 0; i < nbJobs; i++)
     {
-        cout << "J" << var << " ";
+        cout << "J" << solution[i] << " ";
     }
     cout << endl;
 
