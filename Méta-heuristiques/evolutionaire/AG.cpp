@@ -363,8 +363,13 @@ int main()
 
     //load nbJobs, nbMachines and the matrix A
     loader("../../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
+    clock_t start, end;
 
-    Algo_Gen(A, nbJobs, nbMachines, 1000, 0.8, 0.8, 'S', '1', 500, solution, cmax);
+    start = clock();
+    Algo_Gen(A, nbJobs, nbMachines, 500, 0.8, 0.8, 'S', '1', 50, solution, cmax);
+
+    end = clock();
+    double temps = double(end - start) / double(CLOCKS_PER_SEC);
 
     for (auto var : solution)
     {
@@ -373,6 +378,8 @@ int main()
     cout << endl;
 
     cout << "cmax = " << cmax << endl;
+
+    printf(" \n temps d'exec d'AG : %f secondes\n\n", temps);
 
     /* afficher la population
     multimap<double, vector<int>>::iterator it;
