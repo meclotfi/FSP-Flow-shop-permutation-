@@ -1,18 +1,14 @@
-#include "../../FSP.h"
+
 
 void Croisement1pt(vector<int> P1, vector<int> P2, int nbJobs, double proba, vector<int> &E1, vector<int> &E2)
 {
     double x;
     x = rand() / (RAND_MAX + 1.);
-    cout << endl
-         << "proba " << x << endl;
 
     if (x <= proba)
     {
         int y;
         y = 1 + (rand() / (RAND_MAX / (nbJobs - 1)));
-        cout << endl
-             << "alpha: " << y << endl;
         for (int i = 0; i < y; i++)
         {
             E1.push_back(P1[i]);
@@ -60,55 +56,53 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
 {
     double x;
     x = rand() / (RAND_MAX + 1.);
-    cout << endl
-         << "proba " << x << endl;
 
     if (x <= proba)
     {
-        int y=0,z=0;
-        while(y==z){
-        y = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
-        z = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
+        int y = 0, z = 0;
+        while (y == z)
+        {
+            y = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
+            z = 1 + (rand() / (RAND_MAX / (nbJobs - 2)));
         }
-        if (y>z){
-            int temp =z;
-            z=y;
-            y=temp;
+        if (y > z)
+        {
+            int temp = z;
+            z = y;
+            y = temp;
         }
-        cout << endl
-             << "alpha: " << y << endl
-             << "beta: " << z << endl;
         for (int i = 0; i < y; i++)
         {
             E1.push_back(P1[i]);
             E2.push_back(P2[i]);
         }
-        for (int i=y; i<nbJobs;i++){
-            E1.push_back(nbJobs+10);
-            E2.push_back(nbJobs+10);
-        }
-        for (int i = z+1; i < nbJobs; i++)
+        for (int i = y; i < nbJobs; i++)
         {
-            E1.at(i)=P1[i];
-            E2.at(i)=P2[i];
+            E1.push_back(nbJobs + 10);
+            E2.push_back(nbJobs + 10);
+        }
+        for (int i = z + 1; i < nbJobs; i++)
+        {
+            E1.at(i) = P1[i];
+            E2.at(i) = P2[i];
         }
         int ind1 = y, ind2 = y;
-        for (int j = y; j <=z; j++)
+        for (int j = y; j <= z; j++)
         {
             if (std::count(E1.begin(), E1.end(), P2[j]))
             {
-                while (ind1 <=z && std::count(E1.begin(), E1.end(), P1[ind1]))
+                while (ind1 <= z && std::count(E1.begin(), E1.end(), P1[ind1]))
                 {
                     ind1++;
                 }
                 if (ind1 <= z)
                 {
-                    E1.at(j)=P1[ind1];
+                    E1.at(j) = P1[ind1];
                 }
             }
             else
             {
-                E1.at(j)=P2[j];
+                E1.at(j) = P2[j];
             }
 
             if (std::count(E2.begin(), E2.end(), P1[j]))
@@ -117,20 +111,20 @@ void Croisement2pts(vector<int> P1, vector<int> P2, int nbJobs, double proba, ve
                 {
                     ind2++;
                 }
-                if (ind2 <= z )
+                if (ind2 <= z)
                 {
-                    E2.at(j)=P2[ind2];
-
+                    E2.at(j) = P2[ind2];
                 }
             }
             else
             {
-                E2.at(j)=P1[j];
+                E2.at(j) = P1[j];
             }
         }
     }
 }
 
+/*
 int main(int argc, char const *argv[])
 {
     srand(time(0));
@@ -146,7 +140,7 @@ int main(int argc, char const *argv[])
     {
         P1.push_back(i);
         P2.push_back(nbJobs - i - 1);
-    }*/
+    }/
     P1.push_back(4);
     P1.push_back(1);
     P1.push_back(3);
@@ -201,4 +195,4 @@ int main(int argc, char const *argv[])
         cout << E4[i];
     }
     return 0;
-}
+} */

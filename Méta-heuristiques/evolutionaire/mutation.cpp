@@ -1,4 +1,4 @@
-#include "../../FSP.h"
+
 
 //Fonction de mutation par echange
 void mutation_swap(vector<int> individu, int nbjobs, double proba_mut, vector<int> &indivMute)
@@ -32,35 +32,39 @@ void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<
 {
     double x;
     int job, position, posJ;
-
-    // copie du vecteur comme tel
-    indivMute = individu;
+    vector<int>::iterator it;
 
     // géneration aléatoire
-    std::default_random_engine eng(time(0));
-    std::uniform_real_distribution<double> distr(0.0, 1.0);
-    std::uniform_int_distribution<int> distrib(0, nbjobs);
-    x = distr(eng);
+    x = rand() / (RAND_MAX + 1.);
 
     if (x <= proba_mut)
     {
-        job = distrib(eng);
-        position = distrib(eng);
-        auto it = find(indivMute.begin(), indivMute.end(), job);
+        // copie du vecteur comme tel
+        indivMute = individu;
+        job = rand() / (RAND_MAX / (nbjobs - 1));
+        position = rand() / (RAND_MAX / (nbjobs - 1));
+
+        it = find(indivMute.begin(), indivMute.end(), job);
         // If element was found
         if (it != indivMute.end())
         {
-            posJ = it - indivMute.begin();                       // position actuelle du job
-            indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
-            indivMute.erase(indivMute.begin() + posJ);           // suppression dans ancienne position
+            posJ = it - indivMute.begin(); // position actuelle du job
+            if (posJ != position)
+            {
+                indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
+                if (posJ > position)
+                    indivMute.erase(indivMute.begin() + posJ + 1); // suppression dans ancienne position
+                if (posJ < position)
+                    indivMute.erase(indivMute.begin() + posJ);
+            }
         }
     }
 }
-
+/*
 int main()
 {
     vector<int> ind, indmute;
-    int nbjobs = 20;
+    int nbjobs = 5;
     double p_mutation = 1; //la probabilite de mutation a 1 pour muter dans tous les cas
     for (int i = 0; i < nbjobs; i++)
     {
@@ -80,4 +84,4 @@ int main()
     }
 
     return 0;
-}
+} */
