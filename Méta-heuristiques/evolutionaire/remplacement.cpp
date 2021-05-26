@@ -30,16 +30,11 @@ void remplacement(int taille, multimap<double,vector<int> > &P, multimap<double,
 
 void remplacement(int taille, multimap<double, vector<int>> &newP, multimap<double, vector<int>> pool)
 {
-  //  int sizeP = P.size();
-  //  int sizeE = E.size();
   multimap<double, vector<int>>::iterator it;
-  /*
-    for (int i=0; i<sizeP; i++){
-        pool.insert(P[i]);
-    }*/
 
   it = pool.end();
-  for (int i = 0; i < taille; i++)
+
+  for (int i = 0; i < taille; i++) // prendre les N meilleurs individus
   {
     --it;
     newP.insert(make_pair(it->first, it->second));

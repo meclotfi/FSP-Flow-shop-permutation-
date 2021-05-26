@@ -39,49 +39,64 @@ void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<
 
     if (x <= proba_mut)
     {
-        // copie du vecteur comme tel
-        indivMute = individu;
-        job = rand() / (RAND_MAX / (nbjobs - 1));
-        position = rand() / (RAND_MAX / (nbjobs - 1));
+        indivMute = individu; // copie du vecteur comme tel
 
-        it = find(indivMute.begin(), indivMute.end(), job);
-        // If element was found
-        if (it != indivMute.end())
+        job = (rand() / (RAND_MAX / (nbjobs - 1))) % 500; // generer nombre entre 0 et 499
+
+        //position = (int)(rand() / (double)RAND_MAX * (nbjobs - 1));
+
+        position = (rand() / (RAND_MAX / (nbjobs - 1))) % 500; // generer nombre entre 0 et 499
+
+        it = find(indivMute.begin(), indivMute.end(), job); // chercher le job
+
+        if (it != indivMute.end()) // If element was found
         {
             posJ = it - indivMute.begin(); // position actuelle du job
-            if (posJ != position)
+
+            if (posJ != position) // s'il y a changement de position
             {
-                indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
-                if (posJ > position)
-                    indivMute.erase(indivMute.begin() + posJ + 1); // suppression dans ancienne position
-                if (posJ < position)
-                    indivMute.erase(indivMute.begin() + posJ);
+                if (posJ > position) // inserer à l'avant
+                {
+                    indivMute.insert(indivMute.begin() + position, job); // insertion dans nouvelle position
+                    indivMute.erase(indivMute.begin() + posJ + 1);       // suppression dans ancienne position
+                }
+                if (posJ < position) // inserer à l'arrière
+                {
+                    indivMute.insert(indivMute.begin() + position + 1, job); // insertion dans nouvelle position
+                    indivMute.erase(indivMute.begin() + posJ);               // suppression dans ancienne position
+                }
             }
         }
     }
 }
-/*
-int main()
+
+/*int main()
 {
     vector<int> ind, indmute;
     int nbjobs = 5;
     double p_mutation = 1; //la probabilite de mutation a 1 pour muter dans tous les cas
+    srand(time(0));
     for (int i = 0; i < nbjobs; i++)
     {
         ind.push_back(i);
     }
-    cout << "lindividu" << endl;
+    /*  cout << "lindividu" << endl;
     for (int i = 0; i < nbjobs; i++)
     {
         cout << ind[i] << endl;
-    }
-    //mutation_swap(ind, nbjobs, p_mutation, indmute);
+    } /
+//mutation_swap(ind, nbjobs, p_mutation, indmute);
+for (int i = 0; i < 10; i++)
+{
     mutation_insert(ind, nbjobs, p_mutation, indmute);
-    cout << "lindividu muteeeeeee" << endl;
+    cout << "lindividu muteeeeeee :";
     for (int i = 0; i < nbjobs; i++)
     {
-        cout << indmute[i] << endl;
+        cout << indmute[i] << " ";
     }
+    cout << endl;
+}
 
-    return 0;
-} */
+return 0;
+}
+*/
