@@ -121,25 +121,30 @@ void  CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
 //recuperer structure de donnees
 //for m-1 sequence construire et appeler johnson qui retourne une sequence appeler cmax levaluer stocker result tableau de m-1 case et prendre le min 
 
-void main2(int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
     int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;
 
+    clock_t start, end;
+
+
     loader("../benchmarks/13J_5M.txt", &nbJobs, &nbMachines, A); 
-    double debut, fin, temps;
-    debut= omp_get_wtime();
+    start = clock();
     CDS(A, nbJobs, nbMachines, cmax, solution);
-    fin= omp_get_wtime(); temps=fin-debut;
-    printf (" \n CDS time %f secondes\n", temps);
+    end = clock();
+    double temps2 = double(end - start) / double(CLOCKS_PER_SEC);
+    printf (" \n CDS time %f secondes\n", temps2);
     
    
-    
+    /*
     cout <<"Sequence" << endl;
     for(int i = 0; i < nbJobs; i++)
        {
            cout << solution[i] << endl;
-       }
+       }*/
        cout << "Cmax : " << cmax <<endl;
+
+    return 0;
         
 }

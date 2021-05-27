@@ -5,7 +5,7 @@ void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &sol
     int somme, c, currentCmax;
     vector<int> currentSequence, saveSol;
 
-    vector<pair<int, int>> sommeLigne;
+    vector<pair<int, int> > sommeLigne;
 
     // Get the sum of each line ( duration of each job in all machines )
     for (int i = 0; i < nbJobs; i++)
@@ -52,4 +52,31 @@ void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &sol
 
     // std::cout << "" << std::endl;
     // std::cout << "Cmax : " << Cmax(solution, A, nbMachines) << std::endl;
+}
+
+int main(int argc, char const *argv[])
+{
+    int nbJobs, nbMachines, A[500][20], cmax; 
+    vector<int> solution;
+
+    clock_t start, end;
+
+
+    loader("../benchmarks/11J_5M.txt", &nbJobs, &nbMachines, A); 
+    start = clock();
+    NEH(A, nbJobs, nbMachines, cmax, solution);
+    end = clock();
+    double temps2 = double(end - start) / double(CLOCKS_PER_SEC);
+    printf (" \n CDS time %f secondes\n", temps2);
+    
+    
+    cout <<"Sequence" << endl;
+    for(int i = 0; i < nbJobs; i++)
+       {
+           cout << solution[i] << endl;
+       }
+       cout << "Cmax : " << cmax <<endl;
+
+    return 0;
+        
 }

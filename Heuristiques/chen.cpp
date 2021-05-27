@@ -11,7 +11,7 @@ void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
     //int somme, A[500][20],c;
     int somme,c; //Removed A because it a function parameter
 
-    vector<pair<int, int>> Sa, Sb;
+    vector<pair<int, int> > Sa, Sb;
 
     //load nbJobs, nbMachines and the matrix A
     //TODO : add the file path as params
@@ -97,4 +97,32 @@ void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
 
     // // Show the makspan Cmax
     // std::cout << "Temps Cmax :" << Cmax(solution, A, nbMachines) << std::endl;
+}
+
+
+int main(int argc, char const *argv[])
+{
+    int nbJobs, nbMachines, A[500][20], cmax; 
+    vector<int> solution;
+
+    clock_t start, end;
+
+
+    loader("../benchmarks/11J_5M.txt", &nbJobs, &nbMachines, A); 
+    start = clock();
+    Chen(A, nbJobs, nbMachines, cmax, solution);
+    end = clock();
+    double temps2 = double(end - start) / double(CLOCKS_PER_SEC);
+    printf (" \n CDS time %f secondes\n", temps2);
+    
+    
+    cout <<"Sequence" << endl;
+    for(int i = 0; i < nbJobs; i++)
+       {
+           cout << solution[i] << endl;
+       }
+       cout << "Cmax : " << cmax <<endl;
+
+    return 0;
+        
 }
