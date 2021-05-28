@@ -33,7 +33,7 @@ void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &sol
         {
 
             currentSequence.insert(currentSequence.begin() + j, sommeLigne[i].first);
-            currentCmax = Cmax(solution, A, nbMachines);
+            currentCmax = Cmax(currentSequence, A, nbMachines);
 
             // compare the makespans
             if (currentCmax <= c)
@@ -62,7 +62,7 @@ int main(int argc, char const *argv[])
     clock_t start, end;
 
 
-    loader("../benchmarks/11J_5M.txt", &nbJobs, &nbMachines, A); 
+    loader("../benchmarks/11J_5M.txt", &nbJobs, &nbMachines, A);
     start = clock();
     NEH(A, nbJobs, nbMachines, cmax, solution);
     end = clock();
