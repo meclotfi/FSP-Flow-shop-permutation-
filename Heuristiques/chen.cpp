@@ -70,11 +70,11 @@ void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
         // cout << it.first << ' '
         //      << it.second << endl;
 
-        solution.push_back(it.first + 1);
+        solution.push_back(it.first);
     }
 
     // Add c to solution
-    solution.push_back(c + 1);
+    solution.push_back(c);
 
     // std::cout << "Sb" << std::endl;
     // Add Sb to the solution (we increment by one because index of matrix starts in 0)
@@ -84,7 +84,7 @@ void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
         // cout << it.first << ' '
         //      << it.second << endl;
 
-        solution.push_back(it.first + 1);
+        solution.push_back(it.first);
     }
     cmax=Cmax(solution, A, nbMachines);
     // Show the solution
