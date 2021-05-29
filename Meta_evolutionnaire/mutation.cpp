@@ -1,4 +1,4 @@
-
+#include "../FSP.h"
 
 //Fonction de mutation par echange
 void mutation_swap(vector<int> individu, int nbjobs, double proba_mut, vector<int> &indivMute)
@@ -41,11 +41,11 @@ void mutation_insert(vector<int> individu, int nbjobs, double proba_mut, vector<
     {
         indivMute = individu; // copie du vecteur comme tel
 
-        job = (rand() / (RAND_MAX / (nbjobs - 1))) % 500; // generer nombre entre 0 et 499
+        job = (rand() / (RAND_MAX / (nbjobs - 1))) % nbjobs; // generer nombre entre 0 et nbjobs
 
         //position = (int)(rand() / (double)RAND_MAX * (nbjobs - 1));
 
-        position = (rand() / (RAND_MAX / (nbjobs - 1))) % 500; // generer nombre entre 0 et 499
+        position = (rand() / (RAND_MAX / (nbjobs - 1))) % nbjobs; // generer nombre entre 0 et nbjobs
 
         it = find(indivMute.begin(), indivMute.end(), job); // chercher le job
 

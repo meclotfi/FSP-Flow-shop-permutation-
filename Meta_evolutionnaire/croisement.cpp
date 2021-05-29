@@ -1,4 +1,4 @@
-
+#include "../FSP.h"
 
 void Croisement1pt(vector<int> P1, vector<int> P2, int nbJobs, double proba, vector<int> &E1, vector<int> &E2)
 {

@@ -1,9 +1,10 @@
-#include "../../FSP.h"
-#include "croisement.cpp"
-#include "mutation.cpp"
-#include "remplacement.cpp"
+#include "../FSP.h"
 
 using namespace std;
+
+/*void CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
+void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution);
+void Chen(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &solution); 
 
 // calcul la fitness d'une solution
 double fitness(int A[500][20], int nbMachines, vector<int> solution)
@@ -12,15 +13,37 @@ double fitness(int A[500][20], int nbMachines, vector<int> solution)
 }
 
 // generation aléatoire de la population initiale
-void gen_initiale(int nbjobs, int A[500][20], int nbMachines, int nb_elements, multimap<double, vector<int>> &population)
+void gen_initiale(int nbjobs, int A[500][20], int nbMachines, int nb_elements, char heur, multimap<double, vector<int>> &population)
+// if heur = 1 => 3 solutions heuristiques , sinon => tt est aléatoire
 {
     population.clear();
     double f;
-    int position;
+    int position, M;
     int individus = 0;
     vector<int> SOL(nbjobs, 1);
+    int k = 1;
 
-    for (int i = 0; i < nbjobs; i++) // 1 ere solution triviale afin de pouvoir appliquer une permutaion
+    if (heur == '1')
+    {
+
+        CDS(A, nbjobs, nbMachines, M, SOL);
+        f = 1. / M;
+        population.insert(make_pair(f, SOL));
+        SOL.clear();
+
+        Chen(A, nbjobs, nbMachines, M, SOL);
+        f = 1. / M;
+        population.insert(make_pair(f, SOL));
+        SOL.clear();
+
+        NEH(A, nbjobs, nbMachines, M, SOL);
+        f = 1. / M;
+        population.insert(make_pair(f, SOL));
+
+        k = 4;
+    }
+
+    for (int i = 0; i < nbjobs; i++)
     {
         SOL[i] = i;
     }
@@ -28,7 +51,7 @@ void gen_initiale(int nbjobs, int A[500][20], int nbMachines, int nb_elements, m
     f = fitness(A, nbMachines, SOL);
     population.insert(make_pair(f, SOL));
 
-    for (individus = 0; individus < nb_elements - 1; individus++) // génération du reste des individus
+    for (individus = 0; individus < nb_elements - k; individus++) // génération du reste des individus
     {
 
         random_shuffle(SOL.begin(), SOL.end()); // appliquer une permutation à SOL
@@ -48,11 +71,22 @@ void select_roulette(multimap<double, vector<int>> population, vector<vector<int
     int nb_elements = population.size();
     double probas = 0;
     vector<double> cumul_p(nb_elements, 0);
+    vector<int> position;
 
     for (it = population.begin(); it != population.end(); ++it) // calculer la somme des fitness de la population
     {
         somme_f += it->first;
     }
+
+    /* for (it = population.begin(); it != population.end(); ++it) // calculer la proba de chaque indiv et ainsi le cumul
+    {
+        probas = it->first / somme_f;
+        if (i == 0)
+            cumul_p[i] = probas;
+        else
+            cumul_p[i] = cumul_p[i - 1] + probas;
+        i++;
+    } /
 
     for (it = population.begin(); it != population.end(); ++it) // calculer la proba de chaque indiv et ainsi le cumul
     {
@@ -69,9 +103,49 @@ void select_roulette(multimap<double, vector<int>> population, vector<vector<int
     // géneration aléatoire
     x = rand() / (RAND_MAX + 1.);
     y = rand() / (RAND_MAX + 1.);
+    for (i = 0; i < nb_elements; i++)
+    {
+        if (i == 0)
+        {
+            if (x <= cumul_p[i])
+            { // est-ce que X0 est choisit ?
+                position.push_back(i);
+            }
+            if (y <= cumul_p[i])
+            {
+                position.push_back(i);
+            }
+        }
+        else
+        {
+            if ((x > cumul_p[i - 1]) & (x <= cumul_p[i]))
+            {
+                position.push_back(i);
+            }
+            if ((y > cumul_p[i - 1]) & (y <= cumul_p[i]))
+            {
+                position.push_back(i);
+            }
+        }
+        if (position.size() == 2)
+            break;
+    }
+    sort(position.begin(), position.end());
 
-    // choisir deux parents
-    for (it = population.begin(); it != population.end(); ++it)
+    it = population.end();
+    it--;
+    for (int j = 0; j < position[0] - 1; j++)
+        it--;
+    parents.push_back(it->second);
+
+    it = population.end();
+    it--;
+    for (int j = 0; j < position[1] - position[0]; j++)
+        it--;
+    parents.push_back(it->second);
+
+    /* // choisir deux parents
+    for (it = population.end(); it != population.begin(); --it)
     {
         if ((i == 0) & ((x < cumul_p[i]) | (y < cumul_p[i]))) // est-ce que X0 est choisit ?
             parents.push_back(it->second);
@@ -80,7 +154,7 @@ void select_roulette(multimap<double, vector<int>> population, vector<vector<int
         if (parents.size() == 2) // si on a choisit 2 parents, fini.
             break;
         i++;
-    }
+    } /
 }
 
 // algo général
@@ -179,7 +253,7 @@ void select_roulette(multimap<double, vector<int>> population, vector<vector<int
 } */
 
 // algo général
-void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double prob_crois, double prob_mut, char tech_mut, char tech_crois, int nb_gen, vector<int> &solution, int &cmax)
+/*void Algo_Gen_AG(int A[500][20], int nbJobs, int nbMachines, int taille_pop, char heur, double prob_crois, double prob_mut, char tech_mut, char tech_crois, int nb_gen, vector<int> &solution, int &cmax)
 // tech_mut :      si = 'S' => par swap     ;        si = 'I' => par insertion
 // tech_crois :    si = 1 => 1pnt           ;        si = '2' => 2 pnts
 {
@@ -193,7 +267,7 @@ void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double
     multimap<double, vector<int>>::iterator it; // iterator
 
     // logique
-    gen_initiale(nbJobs, A, nbMachines, taille_pop, population); // generation d'une population initiale
+    gen_initiale(nbJobs, A, nbMachines, taille_pop, heur, population); // generation d'une population initiale
 
     for (int i = 0; i < nb_gen; i++) // pour chaque génération
     {
@@ -276,7 +350,7 @@ void Algo_Gen(int A[500][20], int nbJobs, int nbMachines, int taille_pop, double
     solution = it->second;
 
     cmax = (int)(1 / it->first); // meilleure solution
-}
+} */
 
 int main()
 {
@@ -286,11 +360,11 @@ int main()
     srand(time(0)); // pour eviter la meme séquence aléatoire
 
     //load nbJobs, nbMachines and the matrix A
-    loader("../../benchmarks/20jobs10machines.txt", &nbJobs, &nbMachines, A);
+    loader("../benchmarks/500jobs20machines.txt", &nbJobs, &nbMachines, A);
     clock_t start, end;
 
     start = clock();
-    Algo_Gen(A, nbJobs, nbMachines, 500, 0.8, 0.1, 'I', '2', 40, solution, cmax);
+    Algo_Gen_AG(A, nbJobs, nbMachines, 500, '1', 0.8, 0.1, 'I', '2', 200, solution, cmax);
     end = clock();
     double temps = double(end - start) / double(CLOCKS_PER_SEC);
 
