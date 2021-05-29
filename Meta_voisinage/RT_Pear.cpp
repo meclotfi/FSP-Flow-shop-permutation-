@@ -14,14 +14,15 @@ vector<int> voisinRandom(vector<int> s) // copied to evoid including stuff
     vector<int> x = s;
     a = rand() % s.size();
     b = rand() % s.size();
-    if (b == a)
-        b = (b + 1 )% s.size();
+    while (b == a)
+        b = rand() % s.size();
+        // b = b + 1 % ... generates a sequence like Adjecent .. a lot
 
 
-    iter_swap(x.begin() + a, x.begin() + b);
-    // int inter = x[a];
-    // x[a] = x[b];
-    // x[b] = inter;
+//    iter_swap(x.begin() + a, x.begin() + b);
+    int inter = x[a];
+    x[a] = x[b];
+    x[b] = inter;
     return x;
 }
 
@@ -37,28 +38,30 @@ bool notTabu(vector<int> S, vector<vector<int>> LT){
     return true;
 }
 
-// Randomly create a neighbourhood, size = taille
+// Randomly create a neighbourhood, size_max = taille
 vector<vector<int>> PearExchange(vector<int> Sol, int taille){
     vector<vector<int>> Neighborhood;
     int inter ;
     vector<int> voisin;
-    for (int i = 0; i < taille - 1; i++){
+    for (int i = 0; i < taille; i++){
         voisin = voisinRandom(Sol);
 
         if (notTabu(voisin,Neighborhood)){ // we use not Tabu to look if this random voisin has been already added.
             Neighborhood.push_back(voisin);
         }
-        else
-            i--;
+        // else
+        //     i--;
+        // crushes the code!
     }
 
+    printf(" %ld - ", Neighborhood.size());
     return Neighborhood;
 }
 
 // next fit ?
 
 // stop = Pourcentage to stop the same score, from the nbJobs ... by default,
-void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE, int stop, int &cmax, vector<int> &solution, int tailleNeigh)
+void RT_Pear(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE, int stop, int tailleNeigh, int NB_ITS_MAX, int &cmax, vector<int> &solution)
 {
     int M= INT32_MAX ;
     int Act;
@@ -86,7 +89,7 @@ void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE
     int same = 0 ;
     int exact;
     //printf("Machines ; %d  %d\n",nbMachines, nbJobs);
-    while(it < (nbJobs * nbMachines / 5)){
+    while(it < NB_ITS_MAX ){
         if (Boucle == M)
         {
             exact++;
@@ -106,7 +109,7 @@ void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE
         change = false;
         T_cmax = INT32_MAX;
         // can do a while, with next fit, maybe better + Diversification
-        for(i = 0; i < (tailleNeigh - 1); i++){
+        for(i = 0; i < Neighborhood.size(); i++){
             S = Neighborhood[i];
             Act = Cmax(S, A, nbMachines);
             if ((Act <= M) && ( notTabu(S, LT))){
@@ -201,7 +204,7 @@ int main()
     //string filepath = "../benchmarks/500jobs2machines.txt";
     //string filepath = "../benchmarks/200jobs10machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
         // 11344 for 20(50),5
-    string filepath = "../benchmarks/20jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
+    string filepath = "../benchmarks/500jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
 
     //11J_5M.txt
 
@@ -211,7 +214,11 @@ int main()
     
     start = clock();
     vector<int> sol; // N
-    RT(A,nbJobs,nbMachines,'N',12,5,M,sol, (300)); // was 7, and 10 for 20.20
+    int max = 300;
+    char method = 'N';
+    int NB_ITS_MAX = 1000;
+    //NB_ITS_MAX = (nbJobs * nbMachines / 5); // works nicely
+    RT_Pear(A,nbJobs,nbMachines,method,12,5,max,NB_ITS_MAX,M,sol); // was 7, and 10 for 20.20
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
