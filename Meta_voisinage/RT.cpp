@@ -176,7 +176,7 @@ int main()
     //string filepath = "../benchmarks/500jobs2machines.txt";
     //string filepath = "../benchmarks/200jobs10machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
         // 11344 for 20(50),5
-    string filepath = "../benchmarks/20jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
+    string filepath = "../benchmarks/500jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
 
     //11J_5M.txt
 

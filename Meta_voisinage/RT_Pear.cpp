@@ -15,7 +15,7 @@ vector<int> voisinRandom(vector<int> s) // copied to evoid including stuff
     a = rand() % s.size();
     b = rand() % s.size();
     if (b == a)
-        b = rand() % s.size();
+        b = (b + 1 )% s.size();
 
 
     iter_swap(x.begin() + a, x.begin() + b);
@@ -44,7 +44,7 @@ vector<vector<int>> PearExchange(vector<int> Sol, int taille){
     vector<int> voisin;
     for (int i = 0; i < taille - 1; i++){
         voisin = voisinRandom(Sol);
-        printf(".");
+
         if (notTabu(voisin,Neighborhood)){ // we use not Tabu to look if this random voisin has been already added.
             Neighborhood.push_back(voisin);
         }
@@ -98,7 +98,7 @@ void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE
             Boucle = M;
             same = 0;
         }
-        printf("HERE %d  %d\n",M, it);
+        //printf("HERE %d  %d\n",M, it);
         it++;
         Neighborhood.clear();
         printf("-");
@@ -207,10 +207,11 @@ int main()
 
     loader(filepath, &nbJobs, &nbMachines, A);
     clock_t start, end;
+    printf("start");
     
     start = clock();
     vector<int> sol; // N
-    RT(A,nbJobs,nbMachines,'N',12,5,M,sol, (2*nbJobs)); // was 7, and 10 for 20.20
+    RT(A,nbJobs,nbMachines,'N',12,5,M,sol, (300)); // was 7, and 10 for 20.20
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
