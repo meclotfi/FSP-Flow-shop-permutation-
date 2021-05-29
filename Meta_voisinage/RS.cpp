@@ -7,7 +7,7 @@ vector<int> voisin(vector<int> s)
 
     a = rand() % s.size();
     b = rand() % s.size();
-    if (b == a)
+    while (b == a)
         b = rand() % s.size();
 
     iter_swap(x.begin() + a, x.begin() + b);

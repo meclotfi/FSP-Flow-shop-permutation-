@@ -121,7 +121,7 @@ void  CDS(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &so
 //recuperer structure de donnees
 //for m-1 sequence construire et appeler johnson qui retourne une sequence appeler cmax levaluer stocker result tableau de m-1 case et prendre le min 
 
-int main(int argc, char const *argv[])
+int main2(int argc, char const *argv[])
 {
     int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;

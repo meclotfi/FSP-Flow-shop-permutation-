@@ -54,7 +54,7 @@ void NEH(int A[500][20], int nbJobs, int nbMachines, int &cmax, vector<int> &sol
     // std::cout << "Cmax : " << Cmax(solution, A, nbMachines) << std::endl;
 }
 
-int main(int argc, char const *argv[])
+int main222(int argc, char const *argv[])
 {
     int nbJobs, nbMachines, A[500][20], cmax; 
     vector<int> solution;

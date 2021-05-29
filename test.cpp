@@ -67,6 +67,10 @@ vector<vector<int>> AdjacentExchange(vector<int> Sol, int nbJobs){
         printf("\nsize : %ld\n",v.size());
  
     std::cout << "\n";
+        for(int ll = 0; ll < 200; ll++)
+        {
+            printf(" %d, ", rand());
+        }
     
         return 0; 
     } 

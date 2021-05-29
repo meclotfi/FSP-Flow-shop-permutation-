@@ -8,21 +8,26 @@
 // Use This command to compile:
 // g++ RT.cpp ../Heuristiques/chen.cpp ../Heuristiques/CDS.cpp ../Heuristiques/neh.cpp  ../exact/Par_BB.cpp -fopenmp -o g
 
-vector<vector<int>> AdjacentExchange(vector<int> Sol){
-    vector<vector<int>> Neighborhood;
-    int inter ;
-    int nbJobs = Sol.size();
-    for (int i = 0; i < nbJobs - 1; i++){
-        Neighborhood.push_back(Sol);
-        inter = Neighborhood[i][i];
-        Neighborhood[i][i] = Neighborhood[i][i+1];
-        Neighborhood[i][i+1] = inter;
-    }
+vector<int> voisinRandom(vector<int> s) // copied to evoid including stuff
+{
+    int a, b;
+    vector<int> x = s;
+    a = rand() % s.size();
+    b = rand() % s.size();
+    if (b == a)
+        b = rand() % s.size();
 
-    return Neighborhood;
+
+    iter_swap(x.begin() + a, x.begin() + b);
+    // int inter = x[a];
+    // x[a] = x[b];
+    // x[b] = inter;
+    return x;
 }
 
 bool notTabu(vector<int> S, vector<vector<int>> LT){
+    if (LT.empty())
+        return true;
     int size = LT.size();
     for (int i = 0; i < size ; i ++)
     {
@@ -31,10 +36,29 @@ bool notTabu(vector<int> S, vector<vector<int>> LT){
     }
     return true;
 }
+
+// Randomly create a neighbourhood, size = taille
+vector<vector<int>> PearExchange(vector<int> Sol, int taille){
+    vector<vector<int>> Neighborhood;
+    int inter ;
+    vector<int> voisin;
+    for (int i = 0; i < taille - 1; i++){
+        voisin = voisinRandom(Sol);
+        printf(".");
+        if (notTabu(voisin,Neighborhood)){ // we use not Tabu to look if this random voisin has been already added.
+            Neighborhood.push_back(voisin);
+        }
+        else
+            i--;
+    }
+
+    return Neighborhood;
+}
+
 // next fit ?
 
 // stop = Pourcentage to stop the same score, from the nbJobs ... by default,
-void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE, int stop, int &cmax, vector<int> &solution)
+void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE, int stop, int &cmax, vector<int> &solution, int tailleNeigh)
 {
     int M= INT32_MAX ;
     int Act;
@@ -74,14 +98,15 @@ void RT(int A[500][20], int nbJobs, int nbMachines, char Method, int LT_MAX_SIZE
             Boucle = M;
             same = 0;
         }
-       // printf("HERE %d  %d\n",M, it);
+        printf("HERE %d  %d\n",M, it);
         it++;
         Neighborhood.clear();
-        Neighborhood = AdjacentExchange(Smax);
+        printf("-");
+        Neighborhood = PearExchange(Smax, tailleNeigh);
         change = false;
         T_cmax = INT32_MAX;
         // can do a while, with next fit, maybe better + Diversification
-        for(i = 0; i < nbJobs - 1; i++){
+        for(i = 0; i < (tailleNeigh - 1); i++){
             S = Neighborhood[i];
             Act = Cmax(S, A, nbMachines);
             if ((Act <= M) && ( notTabu(S, LT))){
@@ -185,7 +210,7 @@ int main()
     
     start = clock();
     vector<int> sol; // N
-    RT(A,nbJobs,nbMachines,'N',8,5,M,sol); // was 7, and 10 for 20.20
+    RT(A,nbJobs,nbMachines,'N',12,5,M,sol, (2*nbJobs)); // was 7, and 10 for 20.20
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
 
