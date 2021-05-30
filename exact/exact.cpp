@@ -21,149 +21,149 @@ using namespace std;
 
 
 
-int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec,vector<int> &solution)
-{
+// int DFS(list<int> S, list<int> J,int &M,int nbMachines,int A[500][20],vector<int> cmax_vec,vector<int> &solution)
+// {
 
   
     
-list<int> J1, S1;
-int eva;
-int cost;
-vector<int> cost2;    
+// list<int> J1, S1;
+// int eva;
+// int cost;
+// vector<int> cost2;    
     
-    for (auto &it : J)
-    {
+//     for (auto &it : J)
+//     {
        
         
-        S1 = S;
-        S1.push_back(it);
-        J1 = J;
-        J1.remove(it);
+//         S1 = S;
+//         S1.push_back(it);
+//         J1 = J;
+//         J1.remove(it);
      
  
-        // calculer le cout
+//         // calculer le cout
     
        
-        cost2 = Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
-        cost=cost2.back();
+//         cost2 = Cmax_Add_Job(cmax_vec,S1.back(),A,nbMachines);
+//         cost=cost2.back();
       
        
 
         
-        // tester si feuille et caluler l'evaluation sinon
-        if (J1.empty())
-        {
+//         // tester si feuille et caluler l'evaluation sinon
+//         if (J1.empty())
+//         {
            
              
             
-             //cout<<"cmax vec size= \n"<< cmax_vec.size();
+//              //cout<<"cmax vec size= \n"<< cmax_vec.size();
         
-           //cost2 = Cmax_Add_Job(cmax_vec,-1,A,nbMachines);
-           //cost =cost2.back();
-           //if(cost2.back()==cost) cout<<"accept \n";
+//            //cost2 = Cmax_Add_Job(cmax_vec,-1,A,nbMachines);
+//            //cost =cost2.back();
+//            //if(cost2.back()==cost) cout<<"accept \n";
           
-            //update lower bound
-            if (M > cost)
-            {
-                //cout << "M= " << M << " ";
-                solution.clear();
-                copy(S1.begin(),S1.end(),back_inserter(solution));
-                M = cost;
-                //cout << "update M= " << M << " ";
-            }
-        }
-        else
-        {
-            //calculer l'evaluation:
-           eva=eval(cost, A, nbMachines, J1);
+//             //update lower bound
+//             if (M > cost)
+//             {
+//                 //cout << "M= " << M << " ";
+//                 solution.clear();
+//                 copy(S1.begin(),S1.end(),back_inserter(solution));
+//                 M = cost;
+//                 //cout << "update M= " << M << " ";
+//             }
+//         }
+//         else
+//         {
+//             //calculer l'evaluation:
+//            eva=eval(cost, A, nbMachines, J1);
 
-            //tester si possible d'elager
-           // elagage
+//             //tester si possible d'elager
+//            // elagage
 
-               if(eva<M)
-               {               
-               DFS(S1, J1,M,nbMachines,A,cost2,solution);
+//                if(eva<M)
+//                {               
+//                DFS(S1, J1,M,nbMachines,A,cost2,solution);
                
         
-               }
-             //else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
+//                }
+//              //else cout<<" elagage avec eval = "<<eva<<" et M= "<<M<<"\n";
                 
 
-                // brunshing
+//                 // brunshing
                 
-        }
+//         }
 
-        //cout << "back \n";
-    }
-}
+//         //cout << "back \n";
+//     }
+// }
 
-int BB(int nbJobs,int nbMachines,int A[500][20]) 
-{
+// int BB(int nbJobs,int nbMachines,int A[500][20]) 
+// {
 
-int M=INT32_MAX;
-int somme=0;
-list<int> J, S;
-vector<int> solution;
+// int M=INT32_MAX;
+// int somme=0;
+// list<int> J, S;
+// vector<int> solution;
 
-//initiaalization des structure de données
-    //J: l'enssemble des job non encore assigner
-    vector<pair<int, int>> sommeLigne;
-    pair<int, int> c;
+// //initiaalization des structure de données
+//     //J: l'enssemble des job non encore assigner
+//     vector<pair<int, int>> sommeLigne;
+//     pair<int, int> c;
 
-    for (int i = 0; i < nbJobs; i++)
-    {
-        c.first = i;
-        c.second = accumulate(A[i], A[i] + nbMachines, somme);
-        sommeLigne.push_back(c);
+//     for (int i = 0; i < nbJobs; i++)
+//     {
+//         c.first = i;
+//         c.second = accumulate(A[i], A[i] + nbMachines, somme);
+//         sommeLigne.push_back(c);
        
-    }
-    sort(sommeLigne.begin(), sommeLigne.end(), cmp);
+//     }
+//     sort(sommeLigne.begin(), sommeLigne.end(), cmp);
 
-    for (int j = 0; j < nbJobs; j++)
-    {
-        J.push_back(sommeLigne[j].first);
+//     for (int j = 0; j < nbJobs; j++)
+//     {
+//         J.push_back(sommeLigne[j].first);
         
-    }
+//     }
    
-   vector<int> cmax_vec;
-   for (int j = 0; j <= nbMachines; j++)
-    {
-        cmax_vec.push_back(0);
+//    vector<int> cmax_vec;
+//    for (int j = 0; j <= nbMachines; j++)
+//     {
+//         cmax_vec.push_back(0);
         
-    }
+//     }
    
-    DFS(S,J,M,nbMachines,A,cmax_vec,solution);
+//     DFS(S,J,M,nbMachines,A,cmax_vec,solution);
 
-    std::cout << "Solution finale: ";
-    for(auto var : solution)
-    {
-        std::cout << var <<" ";
-    }
-    std::cout << "" << std::endl;
-    cout<< "final M= "<<M;
-    return M;
-}
+//     std::cout << "Solution finale: ";
+//     for(auto var : solution)
+//     {
+//         std::cout << var <<" ";
+//     }
+//     std::cout << "" << std::endl;
+//     cout<< "final M= "<<M;
+//     return M;
+// }
 
 
-void show_progress_bar(float prog,string message)
-{
+// void show_progress_bar(float prog,string message)
+// {
                                          
 
-    int barWidth = 30;
+//     int barWidth = 30;
 
-    std::cout << "[";
-    int pos = barWidth * prog;
-    for (int i = 0; i < barWidth; ++i) {
-        if (i < pos) std::cout << "=";
-        else if (i == pos) std::cout << ">";
-        else std::cout << " ";
-    }
-    std::cout << "] " << int(prog * 100.0) << " %\r  #"<< message<<"#";
-    std::cout.flush();
+//     std::cout << "[";
+//     int pos = barWidth * prog;
+//     for (int i = 0; i < barWidth; ++i) {
+//         if (i < pos) std::cout << "=";
+//         else if (i == pos) std::cout << ">";
+//         else std::cout << " ";
+//     }
+//     std::cout << "] " << int(prog * 100.0) << " %\r  #"<< message<<"#";
+//     std::cout.flush();
 
-std::cout << std::endl;
+// std::cout << std::endl;
 
-}
+// }
 
 int main()
 {
