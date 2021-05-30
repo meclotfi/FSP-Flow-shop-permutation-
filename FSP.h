@@ -859,6 +859,47 @@ vector<int> voisin(vector<int> s) // copied to evoid including stuff
     return x;
 }
 
+// Params:
+// s0: solution initiale
+// T: temperature
+// nb_it_pl: nombre d'itération par palier
+// nb_arret: nombre de palier totale, considéré comme critere d'arret
+// solution: solution finale du recuit simulé
+// cmax: cmax de la solution finale 
+void RS(int A[500][20], int nbJobs, int nbMachines, vector<int> s0, float alpha, float T, int nb_it_pl, int nb_arret, vector<int> &solution, int &cmax)
+{
+    int cpmax, delta;
+    float u;
+    vector<int> x;
+    solution = s0;
+    cmax = Cmax(solution, A, nbMachines);
+
+    for (size_t j = 0; j < nb_arret; j++)
+    {
+        srand(time(0));
+        for (int i = 0; i < nb_it_pl; ++i)
+        {
+            x = voisin(solution);
+            cpmax = Cmax(x, A, nbMachines);
+            delta = cpmax - cmax;
+            if (delta < 0)
+            {
+                solution = x;
+                cmax = cpmax;
+            }
+            else
+            {
+                u = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+                if (u < exp(delta / T))
+                {
+                    solution = x;
+                    cmax = cpmax;
+                }
+            }
+        }
+        T *= alpha;
+    }
+}
 /*********************************** Recherche Tabou Avec Voisinage Adjacent ***********************************/
 
 vector<vector<int>> AdjacentExchange(vector<int> Sol)
