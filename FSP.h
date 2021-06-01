@@ -868,21 +868,11 @@ vector<int> voisin(vector<int> s) // copied to evoid including stuff
 // cmax: cmax de la solution finale 
 void RS(int A[500][20], int nbJobs, int nbMachines, vector<int> s0, float alpha, float T, int nb_it_pl, int nb_arret, vector<int> &solution, int &cmax)
 {
-<<<<<<< HEAD
-    int cpmax, delta,m;
-    float u;
-    vector<int> x,msol;
-    solution = s0;
-    cmax = Cmax(solution, A, nbMachines);
-    m=cmax;
-    msol=s0;
-=======
     int cpmax, delta;
     float u;
     vector<int> x;
     solution = s0;
     cmax = Cmax(solution, A, nbMachines);
->>>>>>> b67c9c97fd12d26f6e4eb259396da02ab0968c4e
 
     for (size_t j = 0; j < nb_arret; j++)
     {
@@ -904,29 +894,11 @@ void RS(int A[500][20], int nbJobs, int nbMachines, vector<int> s0, float alpha,
                 {
                     solution = x;
                     cmax = cpmax;
-<<<<<<< HEAD
-                   if( cmax < m )
-                    {
-                        m=cmax;
-                        msol=solution;
-                    }
-
-=======
->>>>>>> b67c9c97fd12d26f6e4eb259396da02ab0968c4e
                 }
             }
         }
         T *= alpha;
     }
-<<<<<<< HEAD
-
-if (m < cmax)
-{
-    cmax=m;
-    solution=msol;
-}
-=======
->>>>>>> b67c9c97fd12d26f6e4eb259396da02ab0968c4e
 }
 /*********************************** Recherche Tabou Avec Voisinage Adjacent ***********************************/
 
