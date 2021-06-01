@@ -95,6 +95,9 @@ public slots:
     void updateStyles(QTreeWidgetItem *item, int column);
     void clickedSlot();
     void clickedClear();
+    void  paramater_rs(float &T,float &alpha,int &nb_it,int &nb_palier);
+    void  paramater_rt(int &LT_MAX_SIZE, int &stop);
+    void  paramater_eg();
     M_code hashit (std::string const& inString);
 
 private:
