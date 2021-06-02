@@ -508,12 +508,23 @@ foreach(auto item,itemList)
     }
     case eRS:
     {
+        float T=100;
+        float alpha=.8;
+        int nb_it=20;
+        int nb_palier=1000;
+        if(!checkBox->isChecked())
+        {
+        paramater_rs(T,alpha,nb_it,nb_palier);
+        }
+
         auto debut= std::chrono::high_resolution_clock::now();
        //Method Here
         int cmax=0;
         vector<int> solution,s0;
         NEH(A, nbJobs, nbMachines, cmax, s0);
-        RS(A, nbJobs, nbMachines, s0, .8, 100, 20, 1000,solution, cmax);
+
+
+        RS(A, nbJobs, nbMachines, s0, alpha, T, nb_it, nb_palier,solution, cmax);
 
 
        auto fin= std::chrono::high_resolution_clock::now();
@@ -526,11 +537,19 @@ foreach(auto item,itemList)
     }
     case eRT:
     {
+        int LT_MAX_SIZE=8;
+        int stop=5;
+        if(!checkBox->isChecked())
+        {
+         paramater_rt(LT_MAX_SIZE, stop);
+        }
+
+
         auto debut= std::chrono::high_resolution_clock::now();
 
        int cmax=0;
-       vector<int> sol; // N
-        RT(A,nbJobs,nbMachines,'N',8,5,cmax,sol);
+       vector<int> sol;
+        RT(A,nbJobs,nbMachines,'N',LT_MAX_SIZE,stop,cmax,sol);
        auto fin= std::chrono::high_resolution_clock::now();
        auto temps=fin-debut;
        std::stringstream stream;
@@ -566,5 +585,29 @@ foreach(auto item,itemList)
 void  MainWindow::clickedClear()
 {
     PhoneBookModel->Clear();
+
+}
+void  MainWindow::paramater_rs(float &T,float &alpha,int &nb_it,int &nb_palier)
+{
+    // T: temperature et alpha
+    // nb_it_pl: nombre d'itération par palier
+    // nb_arret: nombre de palier totale, considéré comme critere d'arret
+    T = QInputDialog::getDouble(this,"Temperature initiale","Temperature initiale",100.0);
+    alpha = QInputDialog::getDouble(this,"alpha","alpha",.8);
+    nb_it = QInputDialog::getInt(this,"nb_it_pl","nombre d'itération par palier",20);
+    nb_palier = QInputDialog::getInt(this,"nb_arret"," nombre de palier totale, considéré comme critere d'arret",1000);
+
+
+}
+void  MainWindow::paramater_rt(int &LT_MAX_SIZE, int &stop)
+{
+
+
+    LT_MAX_SIZE= QInputDialog::getInt(this,"LT_MAX_SIZE","la taille max de memoire",8);
+   stop = QInputDialog::getInt(this,"stop"," Pourcentage to stop the same score",5);
+
+}
+void  MainWindow::paramater_eg()
+{
 
 }
