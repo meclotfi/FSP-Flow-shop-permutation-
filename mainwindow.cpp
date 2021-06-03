@@ -416,8 +416,8 @@ void  MainWindow::clickedSlot()
           }
     }
 
-int nbJobs, nbMachines, somme, A[500][20];
-int M = INT32_MAX;
+int nbJobs, nbMachines, A[500][20];
+
 string fichier=comboBox->currentText().toStdString();
        //load nbJobs, nbMachines and the matrix A
        string filepath = "../fontsampler/benchmarks/"+fichier;
@@ -560,12 +560,23 @@ foreach(auto item,itemList)
     }
     case eG:
     {
+         int taille_pop=500;
+         char heur='1';
+         double prob_crois=.8;
+         double prob_mut=.1;
+         char tech_mut='I';
+         char tech_crois='2';
+         int nb_gen=200;
+         if(!checkBox->isChecked())
+         {
+         paramater_eg(taille_pop,prob_crois,prob_mut,nb_gen);
+         }
         auto debut= std::chrono::high_resolution_clock::now();
        //Method Here
 
        int cmax=745;
        vector<int> solution;
-       Algo_Gen_AG(A, nbJobs, nbMachines, 500, '1', 0.8, 0.1, 'I', '2', 200, solution, cmax);
+       Algo_Gen_AG(A, nbJobs, nbMachines, taille_pop, heur, prob_crois, prob_mut, tech_mut, tech_crois, nb_gen, solution, cmax);
        auto fin= std::chrono::high_resolution_clock::now();
        auto temps=fin-debut;
        std::stringstream stream;
@@ -607,7 +618,14 @@ void  MainWindow::paramater_rt(int &LT_MAX_SIZE, int &stop)
    stop = QInputDialog::getInt(this,"stop"," Pourcentage to stop the same score",5);
 
 }
-void  MainWindow::paramater_eg()
+void  MainWindow::paramater_eg(int &taille_pop,double &prob_crois,double &prob_mut,int &nb_gen)
 {
+    taille_pop = QInputDialog::getInt(this,"taille_pop","La taille de la population",500);
+    prob_crois = QInputDialog::getDouble(this,"prob_crois","probabilite de croisement",.8);
+    prob_mut = QInputDialog::getDouble(this,"prob_mut","probabilite de mutation",.1);
+    nb_gen= QInputDialog::getInt(this,"nb_gen","nombre de gen",200);
+
+
+
 
 }

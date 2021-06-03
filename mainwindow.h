@@ -97,7 +97,7 @@ public slots:
     void clickedClear();
     void  paramater_rs(float &T,float &alpha,int &nb_it,int &nb_palier);
     void  paramater_rt(int &LT_MAX_SIZE, int &stop);
-    void  paramater_eg();
+    void  paramater_eg(int &taille_pop,double &prob_crois,double &prob_mut,int &nb_gen);
     M_code hashit (std::string const& inString);
 
 private:
