@@ -165,12 +165,12 @@ int main()
   
     //load nbJobs, nbMachines and the matrix A
     //string filepath = "../benchmarks/200jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
-    //string filepath = "../benchmarks/9jobs5machines.txt";// 20,5 635== Best
+    string filepath = "../benchmarks/100jobs5machines.txt";// 20,5 635== Best
     //string filepath = "../benchmarks/13J_5M.txt";//868 .. Stops before ..
     //string filepath = "../benchmarks/500jobs2machines.txt";
     //string filepath = "../benchmarks/200jobs10machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
         // 11344 for 20(50),5
-    string filepath = "../benchmarks/20jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
+    //string filepath = "../benchmarks/100jobs20machines.txt"; //RT(A,nbJobs,nbMachines,20,5,M,sol); 10919
 
     //11J_5M.txt
 
@@ -190,20 +190,21 @@ int main()
     double start, end;
     int j = 0;
 
-    #pragma omp parallel for schedule(dynamic, 10) collapse(4) private(M, sol, start, end,j)
+    #pragma omp parallel for schedule(dynamic, 100) collapse(4) private(M, sol, start, end,j)
     for(int m = 0; m < 3; m++)
         for(int lt = 7; lt <= MAX_LT; lt++)
             for(int st = 2; st < MAX_STOP; st += 5 )
-                for( int i = 100; i < MAX_ITS; i += 100){
-                    for ( j = 0; j < 3; j++) {
-                        //printf(".");
+                for( int i = 500; i < MAX_ITS; i += 500){ // or 100 if PC puissant
+                    for ( j = 0; j < 2; j++) {
+                        printf(".");
                         start = omp_get_wtime();
                         RT2(A,nbJobs,nbMachines,method[m],lt,st,i,M,sol); 
                         //printf("\n-%d-%d-",M,CMAX);
                         end = omp_get_wtime();
                         if (M <= CMAX){
                                 #pragma omp critical
-                                if ((M < CMAX) || (( M == CMAX) && ((b_i > i ) || (tps > end - start))))
+                                //if ((M < CMAX) || (( M == CMAX) && ((b_i > i ) || (tps > end - start))))
+                                if ((M < CMAX) || (( M == CMAX) && (b_i > i )))
                                 {
                                     CMAX = M;
                                     tps = end - start; 
